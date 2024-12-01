@@ -1,3 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using OnlineLearningLibrary.Models;
+using OnlineLearningLibrary.Repository;
+using OnlineLearningLibrary.Service.IService;
+using OnlineLearningLibrary.Service;
+using OnlineLearningLibrary.Repository.IRepository;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,7 +13,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<OnlineLearningDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddScoped<IRepository<Account>, AccountRepository>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<ITeacherService, TeacherSerivce>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
