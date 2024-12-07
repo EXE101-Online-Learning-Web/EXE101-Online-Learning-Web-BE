@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using OnlineLearningWebAPI.Models;
+using OnlineLearningWebAPI.Data;
 
 #nullable disable
 
 namespace OnlineLearningWebAPI.Migrations
 {
     [DbContext(typeof(OnlineLearningDbContext))]
-    [Migration("20241121151723_Initial")]
+    [Migration("20241207112424_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

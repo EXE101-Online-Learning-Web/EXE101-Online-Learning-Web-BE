@@ -4,6 +4,7 @@ using OnlineLearningWebAPI.Repository;
 using OnlineLearningWebAPI.Service.IService;
 using OnlineLearningWebAPI.Service;
 using OnlineLearningWebAPI.Repository.IRepository;
+using OnlineLearningWebAPI.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<OnlineLearningDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging(false));
 
 builder.Services.AddScoped<IRepository<Account>, AccountRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
