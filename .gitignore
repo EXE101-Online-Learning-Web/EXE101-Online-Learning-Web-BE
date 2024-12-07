@@ -17,8 +17,6 @@ x86/
 bld/
 [Bb]in/
 [Oo]bj/
-**/bin/
-**/obj/
 
 # Ignore specific frameworks build
 bin/Debug/net8.0/
