@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using OnlineLearningLibrary.Models;
-using OnlineLearningLibrary.Repository;
-using OnlineLearningLibrary.Service.IService;
-using OnlineLearningLibrary.Service;
-using OnlineLearningLibrary.Repository.IRepository;
+using OnlineLearningWebAPI.Models;
+using OnlineLearningWebAPI.Repository;
+using OnlineLearningWebAPI.Service.IService;
+using OnlineLearningWebAPI.Service;
+using OnlineLearningWebAPI.Repository.IRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 

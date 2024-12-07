@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineLearningLibrary.DTOs;
-using OnlineLearningLibrary.Service.IService;
+using OnlineLearningWebAPI.DTOs;
+using OnlineLearningWebAPI.Service.IService;
 
 namespace OnlineLearningWebAPI.Controllers
 {
