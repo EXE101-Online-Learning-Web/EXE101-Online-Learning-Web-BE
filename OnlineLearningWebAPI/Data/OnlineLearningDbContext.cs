@@ -115,35 +115,13 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
                 IsBan = false,
                 IsVip = false,
                 PasswordHash = "Aa1234@"
-            },
-            new Account
-            {
-                Id = "3",
-                UserName = "vip_student_user",
-                Email = "vipstudent@example.com",
-                Avatar = "vipstudent.png",
-                IsBan = false,
-                IsVip = true,
-                PasswordHash = "Aa1234@"
-            },
-            new Account
-            {
-                Id = "4",
-                UserName = "teacher_user",
-                Email = "teacher@example.com",
-                Avatar = "teacher.png",
-                IsBan = false,
-                IsVip = false,
-                PasswordHash = "Aa1234@"
             }
         );
 
         // Seed data cho AspNetUserRoles
         modelBuilder.Entity<IdentityUserRole<string>>().HasData(
             new IdentityUserRole<string> { UserId = "1", RoleId = "1" }, // Admin
-            new IdentityUserRole<string> { UserId = "2", RoleId = "2" }, // Student
-            new IdentityUserRole<string> { UserId = "3", RoleId = "3" }, // VIP Student
-            new IdentityUserRole<string> { UserId = "4", RoleId = "4" }  // Teacher
+            new IdentityUserRole<string> { UserId = "2", RoleId = "2" } // Student
         );
     }
 

@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace OnlineLearningWebAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class InitData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -476,6 +478,35 @@ namespace OnlineLearningWebAPI.Migrations
                         column: x => x.quizId,
                         principalTable: "Quiz",
                         principalColumn: "quizId");
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "1", null, "Admin", "ADMIN" },
+                    { "2", null, "Student", "STUDENT" },
+                    { "3", null, "VIP Student", "VIP STUDENT" },
+                    { "4", null, "Teacher", "TEACHER" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "Avatar", "ConcurrencyStamp", "Email", "EmailConfirmed", "IsBan", "IsVip", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[,]
+                {
+                    { "1", 0, "admin.png", "a669678f-c4cd-428b-a92b-25f7868d8eda", "admin@example.com", false, false, false, false, null, null, null, "Aa1234@", null, false, "5390917a-284b-4f55-ab7c-524ef0e5b61e", false, "admin_user" },
+                    { "2", 0, "student.png", "5a94ba4b-e3e6-4b28-b7d0-72d7dcaea3d8", "student@example.com", false, false, false, false, null, null, null, "Aa1234@", null, false, "b306ed52-bbb1-41e1-bf02-50651cf35dc3", false, "student_user" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[,]
+                {
+                    { "1", "1" },
+                    { "2", "2" }
                 });
 
             migrationBuilder.CreateIndex(
