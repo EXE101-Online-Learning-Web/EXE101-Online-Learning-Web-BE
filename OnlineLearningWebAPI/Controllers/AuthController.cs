@@ -1,4 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.Data;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Http;
@@ -20,15 +21,21 @@ namespace OnlineLearningWebAPI.Controllers
         private readonly UserManager<Account> _userManager;
         private readonly JwtConfig _jwtConfig;
         private readonly TokenValidationParameters _tokenValidationParameters;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ILogger<AuthController> _logger;
 
 
         public AuthController(UserManager<Account> userManager,
             IOptions<JwtConfig> jwtConfig,
-            TokenValidationParameters tokenValidationParameters)
+            TokenValidationParameters tokenValidationParameters,
+            RoleManager<IdentityRole> roleManager,
+            ILogger<AuthController> logger)
         {
             _userManager = userManager;
             _jwtConfig = jwtConfig.Value;
             _tokenValidationParameters = tokenValidationParameters;
+            _roleManager = roleManager;
+            _logger = logger;
         }
 
         [HttpPost("Login")]
@@ -63,26 +70,58 @@ namespace OnlineLearningWebAPI.Controllers
                 IsVip = false
             };
 
+            // Tạo tài khoản
             var result = await _userManager.CreateAsync(account, request.Password);
 
             if (result.Succeeded)
             {
+                // Gán Role dựa theo thông tin từ request.Role
+                if (!string.IsNullOrEmpty(request.Role))
+                {
+                    var roleExists = await _roleManager.RoleExistsAsync(request.Role);
+
+                    if (roleExists)
+                    {
+                        var roleResult = await _userManager.AddToRoleAsync(account, request.Role);
+
+                        if (!roleResult.Succeeded)
+                        {
+                            return BadRequest(new { message = "Failed to assign role" });
+                        }
+                    }
+                    else
+                    {
+                        return BadRequest(new { message = "Role không tồn tại" });
+                    }
+                }
+
                 return Ok(new { message = "Đăng ký thành công" });
             }
 
             return BadRequest(result.Errors);
         }
 
-        private string GenerateJwtToken(Account user)
+        private async Task<string> GenerateJwtToken(Account user)
         {
+            // Lấy key mã hóa từ JwtConfig
             var key = Encoding.ASCII.GetBytes(_jwtConfig.Secret ?? string.Empty);
 
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), // Unique token ID
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
             };
+
+            // Lấy danh sách roles của user từ database
+            var roles = await _userManager.GetRolesAsync(user);
+
+            // Thêm roles vào JWT claims payload
+            foreach (var role in roles)
+            {
+                _logger.LogInformation("Adding role '{Role}' to JWT claims", role);
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace OnlineLearningWebAPI.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TestController : ControllerBase
     {
+        [Authorize(AuthenticationSchemes = "Bearer", Policy = "RequireAdminRole")]
         [HttpGet("ProtectedEndpoint")]
         public IActionResult GetProtectedData()
         {
