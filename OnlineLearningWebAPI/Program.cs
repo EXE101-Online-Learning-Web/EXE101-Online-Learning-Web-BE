@@ -51,7 +51,7 @@ builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("JwtConfi
 builder.Services.AddJwtAuthentication(builder.Configuration);
 
 // Add Authorize
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorizeConfig(builder.Configuration);
 
 builder.Services.AddIdentity<Account, IdentityRole>()
     .AddEntityFrameworkStores<OnlineLearningDbContext>()

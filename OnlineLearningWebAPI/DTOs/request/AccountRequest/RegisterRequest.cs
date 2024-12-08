@@ -12,5 +12,6 @@ namespace OnlineLearningWebAPI.DTOs.request.AccountRequest
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Mật khẩu phải từ 6 ký tự trở lên.")]
         public string Password { get; set; }
 
+        public string? Role { get; set; }
     }
 }
