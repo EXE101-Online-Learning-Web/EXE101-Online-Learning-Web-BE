@@ -11,7 +11,7 @@ public partial class Certificate
 
     public int CourseId { get; set; }
 
-    public int AccountId { get; set; }
+    public string AccountId { get; set; }
 
     public virtual Account Account { get; set; } = null!;
 }

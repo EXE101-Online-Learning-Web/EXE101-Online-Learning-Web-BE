@@ -13,7 +13,7 @@ public partial class ExamTest
 
     public int Duration { get; set; }
 
-    public int CreatedBy { get; set; }
+    public string CreatedBy { get; set; }
 
     public virtual Account CreatedByNavigation { get; set; } = null!;
 

@@ -7,7 +7,7 @@ public partial class Feedback
 {
     public int FeedbackId { get; set; }
 
-    public int AccountId { get; set; }
+    public string AccountId { get; set; }
 
     public int CourseId { get; set; }
 

@@ -7,7 +7,7 @@ public partial class CourseEnrollment
 {
     public int CourseEnrollmentId { get; set; }
 
-    public int AccountId { get; set; }
+    public string AccountId { get; set; }
 
     public int CourseId { get; set; }
 

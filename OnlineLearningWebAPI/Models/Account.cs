@@ -1,27 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace OnlineLearningWebAPI.Models;
 
-public partial class Account
+public partial class Account : IdentityUser
 {
-    public int AccountId { get; set; }
-
-    public string Email { get; set; } = null!;
-
-    public string? FullName { get; set; }
-
-    public string PasswordHash { get; set; } = null!;
-
     public string? Avatar { get; set; }
 
     public bool? IsBan { get; set; }
 
     public bool? IsVip { get; set; }
-
-    public DateOnly? DateSubscription { get; set; }
-
-    public int RoleId { get; set; }
 
     public virtual ICollection<ActivityLog> ActivityLogs { get; set; } = new List<ActivityLog>();
 
@@ -35,5 +24,4 @@ public partial class Account
 
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 
-    public virtual Role Role { get; set; } = null!;
 }

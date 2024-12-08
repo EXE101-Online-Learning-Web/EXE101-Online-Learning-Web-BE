@@ -17,9 +17,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<OnlineLearningDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging(false));
 
-builder.Services.AddScoped<IRepository<Account>, AccountRepository>();
-builder.Services.AddScoped<IAccountService, AccountService>();
-builder.Services.AddScoped<ITeacherService, TeacherSerivce>();
+//builder.Services.AddScoped<IRepository<Account>, AccountRepository>();
+//builder.Services.AddScoped<IAccountService, AccountService>();
+//builder.Services.AddScoped<ITeacherService, TeacherSerivce>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
