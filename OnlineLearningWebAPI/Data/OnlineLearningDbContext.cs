@@ -81,6 +81,70 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
         ConfigureQuizEntity(modelBuilder);
         ConfigureQuizAnswerEntity(modelBuilder);
         ConfigureQuizTypeEntity(modelBuilder);
+        ConfigureSeekData(modelBuilder);
+    }
+
+    private void ConfigureSeekData(ModelBuilder modelBuilder)
+    {
+        // Seed data cho các Role
+        modelBuilder.Entity<IdentityRole>().HasData(
+            new IdentityRole { Id = "1", Name = "Admin", NormalizedName = "ADMIN" },
+            new IdentityRole { Id = "2", Name = "Student", NormalizedName = "STUDENT" },
+            new IdentityRole { Id = "3", Name = "VIP Student", NormalizedName = "VIP STUDENT" },
+            new IdentityRole { Id = "4", Name = "Teacher", NormalizedName = "TEACHER" }
+        );
+
+        // Seed data cho Account
+        modelBuilder.Entity<Account>().HasData(
+            new Account
+            {
+                Id = "1",
+                UserName = "admin_user",
+                Email = "admin@example.com",
+                Avatar = "admin.png",
+                IsBan = false,
+                IsVip = false,
+                PasswordHash = "Aa1234@"
+            },
+            new Account
+            {
+                Id = "2",
+                UserName = "student_user",
+                Email = "student@example.com",
+                Avatar = "student.png",
+                IsBan = false,
+                IsVip = false,
+                PasswordHash = "Aa1234@"
+            },
+            new Account
+            {
+                Id = "3",
+                UserName = "vip_student_user",
+                Email = "vipstudent@example.com",
+                Avatar = "vipstudent.png",
+                IsBan = false,
+                IsVip = true,
+                PasswordHash = "Aa1234@"
+            },
+            new Account
+            {
+                Id = "4",
+                UserName = "teacher_user",
+                Email = "teacher@example.com",
+                Avatar = "teacher.png",
+                IsBan = false,
+                IsVip = false,
+                PasswordHash = "Aa1234@"
+            }
+        );
+
+        // Seed data cho AspNetUserRoles
+        modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+            new IdentityUserRole<string> { UserId = "1", RoleId = "1" }, // Admin
+            new IdentityUserRole<string> { UserId = "2", RoleId = "2" }, // Student
+            new IdentityUserRole<string> { UserId = "3", RoleId = "3" }, // VIP Student
+            new IdentityUserRole<string> { UserId = "4", RoleId = "4" }  // Teacher
+        );
     }
 
     private void ConfigureCommonEntities(ModelBuilder modelBuilder)

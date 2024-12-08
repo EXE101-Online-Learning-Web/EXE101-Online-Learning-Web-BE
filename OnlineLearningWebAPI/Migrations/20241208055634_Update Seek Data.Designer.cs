@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineLearningWebAPI.Data;
 
@@ -11,9 +12,11 @@ using OnlineLearningWebAPI.Data;
 namespace OnlineLearningWebAPI.Migrations
 {
     [DbContext(typeof(OnlineLearningDbContext))]
-    partial class OnlineLearningDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241208055634_Update Seek Data")]
+    partial class UpdateSeekData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -282,15 +285,15 @@ namespace OnlineLearningWebAPI.Migrations
                             Id = "1",
                             AccessFailedCount = 0,
                             Avatar = "admin.png",
-                            ConcurrencyStamp = "b8f7b711-2c19-4e8e-a4c5-983546cf0fe5",
+                            ConcurrencyStamp = "c92f77f9-a521-4646-9413-244bc726a760",
                             Email = "admin@example.com",
                             EmailConfirmed = false,
                             IsBan = false,
                             IsVip = false,
                             LockoutEnabled = false,
-                            PasswordHash = "Aa1234@",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBCaFxA6UeetNFn0RFTqfHglx2rSN9Jdyv/OwEZzRJq4A7nS6m6R10dSxtlOdBONOQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "881c1dcb-213f-4e03-896f-c8e541ba0eeb",
+                            SecurityStamp = "70f9f20c-d869-4ff0-924d-abe233b3ac8a",
                             TwoFactorEnabled = false,
                             UserName = "admin_user"
                         },
@@ -299,15 +302,15 @@ namespace OnlineLearningWebAPI.Migrations
                             Id = "2",
                             AccessFailedCount = 0,
                             Avatar = "student.png",
-                            ConcurrencyStamp = "ab86bc6a-a21b-4c51-bb71-083a8e14af60",
+                            ConcurrencyStamp = "42439893-ee2b-425d-a478-8fa9a9748dad",
                             Email = "student@example.com",
                             EmailConfirmed = false,
                             IsBan = false,
                             IsVip = false,
                             LockoutEnabled = false,
-                            PasswordHash = "Aa1234@",
+                            PasswordHash = "AQAAAAIAAYagAAAAEC848MjURxNjqnU3ehBq+dh2pMgUhSPWzfNKCrcQ07ykkxpPQGj3kK9SKswl9a7wOQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "79738b00-e51c-44d4-a218-2feee3bbb1b3",
+                            SecurityStamp = "ef1e3b30-dbf2-4273-9163-d2d0eaf1ad01",
                             TwoFactorEnabled = false,
                             UserName = "student_user"
                         },
@@ -316,15 +319,15 @@ namespace OnlineLearningWebAPI.Migrations
                             Id = "3",
                             AccessFailedCount = 0,
                             Avatar = "vipstudent.png",
-                            ConcurrencyStamp = "e678c7fd-da9a-4d98-9901-b8e11bb8407a",
+                            ConcurrencyStamp = "0ff3d837-cf3b-4c81-96a2-2b7a039f3674",
                             Email = "vipstudent@example.com",
                             EmailConfirmed = false,
                             IsBan = false,
                             IsVip = true,
                             LockoutEnabled = false,
-                            PasswordHash = "Aa1234@",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFOKPw6DOIsz4Hd5AmOPplDuzTwzvB92PXCkerZtt8CXYUBG0qK/cFQno6QoWI1YEg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "83cf1749-d2a6-431c-a03f-3b49c6a2dae6",
+                            SecurityStamp = "d1d35a08-bbe2-46b3-8929-50cb692473ab",
                             TwoFactorEnabled = false,
                             UserName = "vip_student_user"
                         },
@@ -333,15 +336,15 @@ namespace OnlineLearningWebAPI.Migrations
                             Id = "4",
                             AccessFailedCount = 0,
                             Avatar = "teacher.png",
-                            ConcurrencyStamp = "349adafd-7f1e-41b8-8e65-01e882a17eab",
+                            ConcurrencyStamp = "32bbf118-6ec5-4059-9af0-f9efcc5789a4",
                             Email = "teacher@example.com",
                             EmailConfirmed = false,
                             IsBan = false,
                             IsVip = false,
                             LockoutEnabled = false,
-                            PasswordHash = "Aa1234@",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEymkm8uTpUOcA4QamcsjM5zG+GOQ73btESHSnLPbEvcnEipkmDMpM4m8iAPoHVQeQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9b900730-8888-439e-9937-5c43b7dbf6d9",
+                            SecurityStamp = "fbb620dd-2cd9-4888-b277-ed2b8b4bfaa9",
                             TwoFactorEnabled = false,
                             UserName = "teacher_user"
                         });
