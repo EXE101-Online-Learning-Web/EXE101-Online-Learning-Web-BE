@@ -1,8 +1,6 @@
-﻿using System.Data;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -10,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using OnlineLearningWebAPI.Configurations;
 using OnlineLearningWebAPI.DTOs.request.AccountRequest;
 using OnlineLearningWebAPI.Models;
+using OnlineLearningWebAPI.Service.IService;
 
 namespace OnlineLearningWebAPI.Controllers
 {
@@ -20,22 +19,22 @@ namespace OnlineLearningWebAPI.Controllers
         // DI
         private readonly UserManager<Account> _userManager;
         private readonly JwtConfig _jwtConfig;
-        private readonly TokenValidationParameters _tokenValidationParameters;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger<AuthController> _logger;
+        private readonly IEmailSender _emailSender;
 
 
         public AuthController(UserManager<Account> userManager,
             IOptions<JwtConfig> jwtConfig,
-            TokenValidationParameters tokenValidationParameters,
             RoleManager<IdentityRole> roleManager,
-            ILogger<AuthController> logger)
+            ILogger<AuthController> logger,
+            IEmailSender emailSender)
         {
             _userManager = userManager;
             _jwtConfig = jwtConfig.Value;
-            _tokenValidationParameters = tokenValidationParameters;
             _roleManager = roleManager;
             _logger = logger;
+            _emailSender = emailSender;
         }
 
         [HttpPost("Login")]
@@ -51,6 +50,12 @@ namespace OnlineLearningWebAPI.Controllers
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginRequest.Password))
             {
                 return Unauthorized(new { Error = "Invalid credentials" });
+            }
+
+            // Kiểm tra Email đã xác nhận hay chưa
+            if (!user.EmailConfirmed)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new { Error = "Email is not confirmed. Please confirm your email before logging in." });
             }
 
             // Tạo token
@@ -95,10 +100,54 @@ namespace OnlineLearningWebAPI.Controllers
                     }
                 }
 
-                return Ok(new { message = "Đăng ký thành công" });
+                // Tạo token xác nhận email
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(account);
+
+                // Tạo URL xác nhận email
+                var confirmEmailUrl = Url.Action(
+                    "ConfirmEmail", // Action name
+                    "Auth", // Controller name
+                    new { userId = account.Id, token = token }, // Route values
+                    Request.Scheme // Generate absolute URL
+                );
+
+                // Gửi email xác nhận
+                try
+                {
+                    await _emailSender.SendEmailAsync(
+                        account.Email,
+                        "Xác nhận email",
+                        $"<p>Vui lòng xác nhận email của bạn bằng cách nhấp vào link sau:</p><a href=\"{confirmEmailUrl}\">Xác nhận email</a>"
+                    );
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(500, new { message = "Failed to send confirmation email", error = ex.Message });
+                }
+
+                return Ok(new { message = "Đăng ký thành công, vui lòng kiểm tra email để xác nhận tài khoản." });
             }
 
             return BadRequest(result.Errors);
+        }
+
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+
+            if (result.Succeeded)
+            {
+                return Ok(new { message = "Email đã được xác nhận thành công" });
+            }
+
+            return BadRequest(new { message = "Xác nhận email thất bại" });
         }
 
         private async Task<string> GenerateJwtToken(Account user)
