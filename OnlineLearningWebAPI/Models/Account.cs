@@ -24,4 +24,5 @@ public partial class Account : IdentityUser
 
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 
+    public Profile? Profile { get; set; }
 }
