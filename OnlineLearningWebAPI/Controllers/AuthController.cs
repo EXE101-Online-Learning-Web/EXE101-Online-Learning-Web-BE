@@ -150,6 +150,80 @@ namespace OnlineLearningWebAPI.Controllers
             return BadRequest(new { message = "Xác nhận email thất bại" });
         }
 
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return BadRequest(new { message = "Email không được để trống." });
+            }
+
+            // Kiểm tra người dùng có tồn tại không
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound(new { message = "Email không tồn tại." });
+            }
+
+            // Tạo token để đặt lại mật khẩu
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            // Tạo URL để đặt lại mật khẩu
+            var resetPasswordUrl = Url.Action(
+                "ResetPassword", // Action name
+                "Auth", // Controller name
+                new { userId = user.Id, token = token }, // Route values // get in FE
+                Request.Scheme // Generate absolute URL
+            );
+
+            // Gửi email đặt lại mật khẩu
+            try
+            {
+                await _emailSender.SendEmailAsync(
+                    user.Email,
+                    "Đặt lại mật khẩu",
+                    $"<p>Để đặt lại mật khẩu của bạn, vui lòng nhấp vào liên kết sau:</p><a href=\"{resetPasswordUrl}\">Đặt lại mật khẩu</a> <br> <p>Token: {token}</p>"
+                );
+                return Ok(new { message = "Email đặt lại mật khẩu đã được gửi thành công." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi khi gửi email đặt lại mật khẩu.");
+                return StatusCode(500, new { message = "Lỗi khi gửi email đặt lại mật khẩu.", error = ex.Message });
+            }
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest resetPasswordRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new { message = "Dữ liệu không hợp lệ." });
+            }
+
+            // Kiểm tra NewPassword và ConfirmPassword có khớp không
+            if (resetPasswordRequest.NewPassword != resetPasswordRequest.ConfirmPassword)
+            {
+                return BadRequest(new { message = "Mật khẩu mới và xác nhận mật khẩu không khớp." });
+            }
+
+            // Tìm người dùng theo userId
+            var user = await _userManager.FindByIdAsync(resetPasswordRequest.UserId);
+            if (user == null)
+            {
+                return NotFound(new { message = "Người dùng không tồn tại." });
+            }
+
+            // Đặt lại mật khẩu
+            var result = await _userManager.ResetPasswordAsync(user, resetPasswordRequest.Token, resetPasswordRequest.NewPassword);
+            if (!result.Succeeded)
+            {
+                return BadRequest(new { message = "Đặt lại mật khẩu thất bại.", errors = result.Errors.Select(e => e.Description) });
+            }
+
+            return Ok(new { message = "Mật khẩu đã được đặt lại thành công." });
+        }
+
         private async Task<string> GenerateJwtToken(Account user)
         {
             // Lấy key mã hóa từ JwtConfig
