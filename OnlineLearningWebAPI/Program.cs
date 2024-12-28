@@ -5,6 +5,19 @@ using Microsoft.AspNetCore.Identity;
 using OnlineLearningWebAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+var allowedOrigins = builder.Configuration.GetValue<string>("CorsSettings:AllowedOrigins");
+
+// Accept CORS API REACT
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
+});
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -71,10 +84,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("AllowReactApp");
 app.UseHttpsRedirection();
 app.UseRouting();
 
-// Middleware Authentication và Authorization
+// Middleware Authentication vï¿½ Authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
