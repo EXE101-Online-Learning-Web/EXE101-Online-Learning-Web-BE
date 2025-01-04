@@ -15,9 +15,11 @@ namespace OnlineLearningWebAPI.Configurations
             //builder.Services.AddScoped<ITeacherService, TeacherSerivce>();
             services.AddScoped<IRepository<Profile>, Repository.Repository<Profile>>();
             services.AddScoped<IRepository<Account>, Repository.Repository<Account>>();
+            services.AddScoped<IRepository<Course>, Repository.Repository<Course>>();
 
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IProfileService, ProfileService>();
+            services.AddScoped<ICourseService, CourseService>();
             return services;
         }
     }

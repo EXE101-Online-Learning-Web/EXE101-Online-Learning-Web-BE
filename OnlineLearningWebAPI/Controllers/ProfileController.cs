@@ -12,17 +12,19 @@ namespace OnlineLearningWebAPI.Controllers
     [ApiController]
     public class ProfileController : ControllerBase
     {
-        private readonly IProfileService _profileService;
+        private readonly IServiceProvider _serviceProvider;
 
-        public ProfileController(IProfileService profileService)
+        public ProfileController(IServiceProvider serviceProvider)
         {
-            _profileService = profileService;
+            _serviceProvider = serviceProvider;
         }
 
         // GET: api/teachers/{id}
         [HttpGet("{accountId}")]
-        public async Task<IActionResult> GetProfileByAccountId(string accountId)
+        public IActionResult GetProfileByAccountId(string accountId)
         {
+            var _profileService = _serviceProvider.GetService<IProfileService>();
+
             Profile profile = _profileService.GetProfileByAccountId(accountId);
 
             if (profile == null) return NotFound(new { message = "[ProfileController] | GetProfileByAccountId | Profile not found" });
@@ -34,6 +36,8 @@ namespace OnlineLearningWebAPI.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequest updateProfileDTO)
         {
+            var _profileService = _serviceProvider.GetService<IProfileService>();
+
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             GeneralResponse response = await _profileService.UpdateProfile(updateProfileDTO);
@@ -47,6 +51,8 @@ namespace OnlineLearningWebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> PostProfile([FromBody] AddProfileRequest addProfileDTO)
         {
+            var _profileService = _serviceProvider.GetService<IProfileService>();
+
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             GeneralResponse response = await _profileService.AddNewProfile(addProfileDTO);
