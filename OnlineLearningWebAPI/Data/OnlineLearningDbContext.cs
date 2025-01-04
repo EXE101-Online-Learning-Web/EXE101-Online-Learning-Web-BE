@@ -399,6 +399,20 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
         });
     }
 
+    private void ConfigureProfileEntity(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Profile>(entity =>
+        {
+            entity.HasKey(e => e.ProfileId);
+            entity.Property(e => e.ProfileId).ValueGeneratedOnAdd();
+            entity.ToTable("Profile");
+
+            entity.HasOne(d => d.Account)
+                  .WithOne(p => p.Profile)
+                  .HasForeignKey<Profile>(d => d.AccountId)
+                  .OnDelete(DeleteBehavior.ClientSetNull);
+        });
+    }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
