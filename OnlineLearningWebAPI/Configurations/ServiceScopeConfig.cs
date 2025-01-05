@@ -1,4 +1,5 @@
 ﻿using OnlineLearningWebAPI.Models;
+using OnlineLearningWebAPI.Repository;
 using OnlineLearningWebAPI.Repository.IRepository;
 using OnlineLearningWebAPI.Service;
 using OnlineLearningWebAPI.Service.IService;
@@ -9,15 +10,19 @@ namespace OnlineLearningWebAPI.Configurations
     {
         public static IServiceCollection AddServiceScopeConfig(this IServiceCollection services)
         {
-            // Add Service Scope
-            //builder.Services.AddScoped<IRepository<Account>, AccountRepository>();
-            //builder.Services.AddScoped<IAccountService, AccountService>();
-            //builder.Services.AddScoped<ITeacherService, TeacherSerivce>();
             services.AddScoped<IRepository<Profile>, Repository.Repository<Profile>>();
             services.AddScoped<IRepository<Account>, Repository.Repository<Account>>();
 
+            services.AddScoped<ICourseRepository, CourseRepository>();
+            services.AddScoped<ICourseCategoryRepository, CourseCategoryRepository>();
+
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IProfileService, ProfileService>();
+
+            services.AddScoped<ITeacherService, TeacherService>();
+            services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<ICourseCategoryService, CourseCategoryService>();
+
             return services;
         }
     }
