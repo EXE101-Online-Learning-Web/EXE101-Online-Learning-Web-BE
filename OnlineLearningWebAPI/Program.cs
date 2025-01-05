@@ -24,9 +24,7 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 builder.Services.AddEndpointsApiExplorer();
 
 // Config DTO Scope
-builder.Services.AddDtoScopeConfig(builder);
-// Config Repository Scope
-builder.Services.AddRepositoryScopeConfig();
+builder.Services.AddDtoScopeConfig(builder, builder.Configuration);
 // Config Service Scope
 builder.Services.AddServiceScopeConfig();
 
