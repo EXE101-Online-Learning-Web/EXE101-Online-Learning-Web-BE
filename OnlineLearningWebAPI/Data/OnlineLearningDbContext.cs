@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using OnlineLearningWebAPI.Models;
 
 namespace OnlineLearningWebAPI.Data;
@@ -123,6 +120,88 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
             new IdentityUserRole<string> { UserId = "1", RoleId = "1" }, // Admin
             new IdentityUserRole<string> { UserId = "2", RoleId = "2" } // Student
         );
+
+        modelBuilder.Entity<CourseCategory>().HasData(
+            new CourseCategory
+            {
+                CategoryId = 1,
+                Name = "Artificial Intelligence"
+            },
+            new CourseCategory
+            {
+                CategoryId = 2,
+                Name = "Programming Languages"
+            }
+        );
+
+        modelBuilder.Entity<Course>().HasData(
+            new Course
+            {
+                CourseId = 1,
+                CourseTitle = "Introduction to AI",
+                TeacherId = "2",
+                Description = "Learn the fundamentals of Artificial Intelligence.",
+                CreateDate = DateOnly.FromDateTime(DateTime.UtcNow),
+                CategoryId = 1
+            },
+            new Course
+            {
+                CourseId = 2,
+                CourseTitle = "Advanced Python Programming",
+                TeacherId = "2",
+                Description = "Master Python with advanced concepts and libraries.",
+                CreateDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-30)),
+                CategoryId = 2
+            }
+        );
+
+        modelBuilder.Entity<CourseEnrollment>().HasData(
+            new CourseEnrollment
+            {
+                CourseEnrollmentId = 1,
+                CourseId = 1,
+                AccountId = "2"
+            },
+            new CourseEnrollment
+            {
+                CourseEnrollmentId = 2,
+                CourseId = 2,
+                AccountId = "2"
+            }
+        );
+
+        modelBuilder.Entity<CourseTag>().HasData(
+            new CourseTag
+            {
+                CourseTagId = 1,
+                CourseId = 1,
+                TagName = "AI"
+            },
+            new CourseTag
+            {
+                CourseTagId = 2,
+                CourseId = 2,
+                TagName = "Python"
+            }
+        );
+
+        modelBuilder.Entity<Feedback>().HasData(
+            new Feedback
+            {
+                FeedbackId = 1,
+                AccountId = "2",
+                CourseId = 1,
+                FeedbackText = "Great course on AI!"
+            },
+            new Feedback
+            {
+                FeedbackId = 2,
+                AccountId = "2",
+                CourseId = 2,
+                FeedbackText = "The Python content is very insightful!"
+            }
+        );
+
     }
 
     private void ConfigureCommonEntities(ModelBuilder modelBuilder)
