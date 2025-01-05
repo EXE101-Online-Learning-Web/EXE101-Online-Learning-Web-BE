@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineLearningWebAPI.DTOs;
+using OnlineLearningWebAPI.DTOs.request.CourseRequest;
 using OnlineLearningWebAPI.Service.IService;
 
 namespace OnlineLearningWebAPI.Controllers
@@ -15,37 +15,47 @@ namespace OnlineLearningWebAPI.Controllers
             _courseService = courseService;
         }
 
-        // GET: api/courses/{id}
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCourse(int id)
-        {
-            var course = await _courseService.GetCourseByIdAsync(id);
-            if (course == null)
-                return NotFound(new { message = "[CourseController] | GetCourse | Course not found" });
-
-            return Ok(course);
-        }
-
-        // PUT: api/courses/{id}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCourse(int id, [FromBody] CourseDTO courseDTO)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var isUpdated = await _courseService.UpdateCourseAsync(id, courseDTO);
-            if (!isUpdated)
-                return NotFound(new { message = "[CourseController] | UpdateCourse | Course not found" });
-
-            return NoContent();
-        }
-
-        // GET: api/courses
         [HttpGet]
         public async Task<IActionResult> GetAllCourses()
         {
             var courses = await _courseService.GetAllCoursesAsync();
             return Ok(courses);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCourseById(int id)
+        {
+            var course = await _courseService.GetCourseByIdAsync(id);
+            if (course == null) return NotFound(new { message = "Course not found" });
+
+            return Ok(course);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateCourse([FromBody] CreateCourseDTO createCourseDTO)
+        {
+            var result = await _courseService.CreateCourseAsync(createCourseDTO);
+            if (!result) return BadRequest(new { message = "Failed to create course" });
+
+            return Ok(new { message = "Course created successfully" });
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCourse(int id, [FromBody] UpdateCourseDTO updateCourseDTO)
+        {
+            var result = await _courseService.UpdateCourseAsync(id, updateCourseDTO);
+            if (!result) return NotFound(new { message = "Course not found or update failed" });
+
+            return Ok(new { message = "Course updated successfully" });
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCourse(int id)
+        {
+            var result = await _courseService.DeleteCourseAsync(id);
+            if (!result) return NotFound(new { message = "Course not found or delete failed" });
+
+            return Ok(new { message = "Course deleted successfully" });
         }
     }
 }

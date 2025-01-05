@@ -1,38 +1,31 @@
-﻿using OnlineLearningWebAPI.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using OnlineLearningWebAPI.Data;
+using OnlineLearningWebAPI.Models;
 using OnlineLearningWebAPI.Repository.IRepository;
 
 namespace OnlineLearningWebAPI.Repository
 {
-    public class CourseRepository : IRepository<Course>
+    public class CourseRepository : Repository<Course>, ICourseRepository
     {
-        public Task AddAsync(Course entity)
+        private readonly OnlineLearningDbContext _context;
+
+        public CourseRepository(OnlineLearningDbContext context) : base(context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public void Delete(Course entity)
+        public async Task<IEnumerable<Course>> GetCoursesByTeacherIdAsync(string teacherId)
         {
-            throw new NotImplementedException();
+            return await _context.Courses
+                .Where(c => c.TeacherId == teacherId)
+                .ToListAsync();
         }
 
-        public Task<IEnumerable<Course>> GetAllAsync()
+        public async Task<IEnumerable<Course>> GetCoursesByCategoryIdAsync(int categoryId)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<Course?> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task SaveChangesAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(Course entity)
-        {
-            throw new NotImplementedException();
+            return await _context.Courses
+                .Where(c => c.CategoryId == categoryId)
+                .ToListAsync();
         }
     }
 }

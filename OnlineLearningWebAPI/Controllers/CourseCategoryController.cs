@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineLearningWebAPI.DTOs;
+using OnlineLearningWebAPI.DTOs.request.CourseCategoryRequest;
 using OnlineLearningWebAPI.Service.IService;
 
 namespace OnlineLearningWebAPI.Controllers
@@ -8,43 +8,60 @@ namespace OnlineLearningWebAPI.Controllers
     [ApiController]
     public class CourseCategoryController : ControllerBase
     {
-        private readonly ICourseCategoryService _courseCategoryService;
+        private readonly ICourseCategoryService _categoryService;
 
-        public CourseCategoryController(ICourseCategoryService courseCategoryService)
+        public CourseCategoryController(ICourseCategoryService categoryService)
         {
-            _courseCategoryService = courseCategoryService;
+            _categoryService = categoryService;
         }
 
-        // GET: api/coursecategories/{id}
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCategory(int id)
+        [HttpGet]
+        public async Task<IActionResult> GetAllCategories()
         {
-            var category = await _courseCategoryService.GetCategoryByIdAsync(id);
-            if (category == null)
-                return NotFound(new { message = "[CourseCategoryController] | GetCategory | Category not found" });
+            var categories = await _categoryService.GetAllCategoriesAsync();
+            return Ok(categories);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCategoryById(int id)
+        {
+            var category = await _categoryService.GetCategoryByIdAsync(id);
+            if (category == null) return NotFound(new { message = "Category not found" });
 
             return Ok(category);
         }
 
-        // PUT: api/coursecategories/{id}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCategory(int id, [FromBody] CourseCategoryDTO courseCategoryDTO)
+        [HttpPost]
+        public async Task<IActionResult> CreateCategory([FromBody] CreateCourseCategoryDTO createCategoryDTO)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var result = await _categoryService.CreateCategoryAsync(createCategoryDTO);
+            if (!result) return BadRequest(new { message = "Failed to create category" });
 
-            var isUpdated = await _courseCategoryService.UpdateCategoryAsync(id, courseCategoryDTO);
-            if (!isUpdated)
-                return NotFound(new { message = "[CourseCategoryController] | UpdateCategory | Category not found" });
-
-            return NoContent();
+            return Ok(new { message = "Category created successfully" });
         }
 
-        // GET: api/coursecategories
-        [HttpGet]
-        public async Task<IActionResult> GetAllCategories()
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCategory(int id, [FromBody] UpdateCourseCategoryDTO updateCategoryDTO)
         {
-            var categories = await _courseCategoryService.GetAllCategoriesAsync();
+            var result = await _categoryService.UpdateCategoryAsync(id, updateCategoryDTO);
+            if (!result) return NotFound(new { message = "Category not found or update failed" });
+
+            return Ok(new { message = "Category updated successfully" });
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCategory(int id)
+        {
+            var result = await _categoryService.DeleteCategoryAsync(id);
+            if (!result) return NotFound(new { message = "Category not found or delete failed" });
+
+            return Ok(new { message = "Category deleted successfully" });
+        }
+
+        [HttpGet("with-courses")]
+        public async Task<IActionResult> GetCategoriesWithCourses()
+        {
+            var categories = await _categoryService.GetCategoriesWithCoursesAsync();
             return Ok(categories);
         }
     }
