@@ -1,6 +1,8 @@
 ﻿using Net.payOS;
 using Net.payOS.Types;
 using OnlineLearningWebAPI.DTOs.request.PaymentRequest;
+using OnlineLearningWebAPI.Models;
+using OnlineLearningWebAPI.Repository.IRepository;
 using OnlineLearningWebAPI.Service.IService;
 
 namespace OnlineLearningWebAPI.Service
@@ -9,9 +11,12 @@ namespace OnlineLearningWebAPI.Service
     {
         private readonly PayOS _payOS;
 
-        public PaymentService(PayOS payOS)
+        private readonly IHistoryPaymentRepository _historyPaymentRepository;
+
+        public PaymentService(PayOS payOS, IHistoryPaymentRepository historyPaymentRepository)
         {
             _payOS = payOS;
+            _historyPaymentRepository = historyPaymentRepository;
         }
         public async Task<string> CreatePaymentLink(CreatePaymentLinkRequest request)
         {
@@ -29,6 +34,17 @@ namespace OnlineLearningWebAPI.Service
             }
 
             return response.checkoutUrl;
+        }
+
+        public async Task<IEnumerable<HistoryPayment>> GetPaymentHistory(string userId)
+        {
+            return await _historyPaymentRepository.GetPaymentHistoryAsync(userId);
+        }
+
+        public async Task AddPaymentHistory(HistoryPayment historyPayment)
+        {
+            await _historyPaymentRepository.AddPaymentHistoryAsync(historyPayment);
+            await _historyPaymentRepository.SaveAsync();
         }
     }
 }

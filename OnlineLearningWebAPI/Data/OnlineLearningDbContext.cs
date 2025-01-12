@@ -44,6 +44,8 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
 
     public virtual DbSet<QuizType> QuizTypes { get; set; }
 
+    public virtual DbSet<HistoryPayment> HistoryPayment { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -79,6 +81,7 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
         ConfigureQuizAnswerEntity(modelBuilder);
         ConfigureQuizTypeEntity(modelBuilder);
         ConfigureSeekData(modelBuilder);
+        ConfigureHistoryPaymentEnity(modelBuilder);
     }
 
     private void ConfigureSeekData(ModelBuilder modelBuilder)
@@ -199,6 +202,28 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
                 AccountId = "2",
                 CourseId = 2,
                 FeedbackText = "The Python content is very insightful!"
+            }
+        );
+
+        // Seed data for HistoryPayment
+        modelBuilder.Entity<HistoryPayment>().HasData(
+            new HistoryPayment
+            {
+                Id = 1,
+                UserId = "2",
+                CourseId = 1,
+                Amount = 500000,
+                PaymentDate = new DateTime(2025, 1, 1),
+                PaymentMethod = "PayOs"
+            },
+            new HistoryPayment
+            {
+                Id = 2,
+                UserId = "2",
+                CourseId = 2,
+                Amount = 750000,
+                PaymentDate = new DateTime(2025, 1, 5),
+                PaymentMethod = "PayOs"
             }
         );
 
@@ -491,6 +516,22 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
                   .HasForeignKey<Profile>(d => d.AccountId)
                   .OnDelete(DeleteBehavior.ClientSetNull);
         });
+    }
+
+    private void ConfigureHistoryPaymentEnity(ModelBuilder modelBuilder)
+    {
+        // Quan hệ giữa HistoryPayment và Account
+        modelBuilder.Entity<HistoryPayment>()
+            .HasOne(hp => hp.User)
+            .WithMany(a => a.HistoryPayments)
+            .HasForeignKey(hp => hp.UserId)
+            .HasPrincipalKey(a => a.Id);
+
+        // Quan hệ giữa HistoryPayment và Course
+        modelBuilder.Entity<HistoryPayment>()
+            .HasOne(hp => hp.Course)
+            .WithMany(c => c.HistoryPayments)
+            .HasForeignKey(hp => hp.CourseId);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

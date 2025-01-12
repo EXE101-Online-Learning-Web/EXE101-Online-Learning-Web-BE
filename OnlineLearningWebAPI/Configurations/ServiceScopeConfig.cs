@@ -18,6 +18,7 @@ namespace OnlineLearningWebAPI.Configurations
 
             services.AddScoped<ICourseRepository, CourseRepository>();
             services.AddScoped<ICourseCategoryRepository, CourseCategoryRepository>();
+            services.AddScoped<IHistoryPaymentRepository, HistoryPaymentRepository>();
 
             // Add Service Scope
             //builder.Services.AddScoped<IAccountService, AccountService>();
