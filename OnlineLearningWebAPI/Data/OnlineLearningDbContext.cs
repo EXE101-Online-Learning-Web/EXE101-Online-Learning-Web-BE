@@ -148,7 +148,8 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
                 TeacherId = "2",
                 Description = "Learn the fundamentals of Artificial Intelligence.",
                 CreateDate = DateOnly.FromDateTime(DateTime.UtcNow),
-                CategoryId = 1
+                CategoryId = 1,
+                Status = CourseStatus.Pending
             },
             new Course
             {
@@ -157,7 +158,8 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
                 TeacherId = "2",
                 Description = "Master Python with advanced concepts and libraries.",
                 CreateDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-30)),
-                CategoryId = 2
+                CategoryId = 2,
+                Status = CourseStatus.Approved
             }
         );
 
@@ -324,6 +326,10 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
                   .HasForeignKey(d => d.TeacherId)
                   .OnDelete(DeleteBehavior.ClientSetNull);
         });
+
+        modelBuilder.Entity<Course>()
+            .Property(o => o.Status)
+            .HasConversion<int>(); // Ánh xạ enum thành int trong database
     }
 
     private void ConfigureCourseCategoryEntity(ModelBuilder modelBuilder)
