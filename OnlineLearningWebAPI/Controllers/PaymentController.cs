@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineLearningWebAPI.DTOs.request.PaymentRequest;
-using OnlineLearningWebAPI.Models;
+using OnlineLearningWebAPI.Enum;
 using OnlineLearningWebAPI.Service.IService;
 
 namespace OnlineLearningWebAPI.Controllers
@@ -11,9 +11,12 @@ namespace OnlineLearningWebAPI.Controllers
     {
         private readonly IPaymentService _paymentService;
 
-        public PaymentController(IPaymentService paymentService)
+        private readonly IOrderService _orderService;
+
+        public PaymentController(IPaymentService paymentService, IOrderService orderService)
         {
             _paymentService = paymentService;
+            _orderService = orderService;
         }
 
         [HttpPost("payment-link")]
@@ -31,38 +34,38 @@ namespace OnlineLearningWebAPI.Controllers
             }
         }
 
-        [HttpGet("history/{userId}")]
-        public async Task<IActionResult> GetPaymentHistory(string userId)
+        [HttpGet("paymentSuccess")]
+        public async Task<IActionResult> PaymentSuccess(string code, string id, bool cancel, string status, string orderCode)
         {
-            try
+            // Kiểm tra điều kiện thanh toán thành công
+            if (code == "00" && status == "PAID" && !cancel)
             {
-                var history = await _paymentService.GetPaymentHistory(userId);
-                return Ok(history);
+                // Cập nhật trạng thái Order
+                var result = await _orderService.UpdateOrderStatusAsync(orderCode, OrderStatus.Completed);
+
+                if (result)
+                {
+                    return Ok(new { message = "Payment successful and order status updated" });
+                }
+
+                return NotFound(new { message = "Order not found or invalid orderCode" });
             }
-            catch (Exception ex)
-            {
-                return BadRequest(new { Message = ex.Message });
-            }
+
+            return BadRequest(new { message = "Payment failed or canceled" });
         }
 
-        [HttpPost("AddPaymentHistory")]
-        public async Task<IActionResult> AddPaymentHistory()
+        [HttpGet("purchaseHistory")]
+        public async Task<IActionResult> GetPurchaseHistory(string userId)
         {
-            try
+            var orders = await _orderService.GetOrdersByUserIdAsync(userId, OrderStatus.Completed);
+
+            if (orders == null || !orders.Any())
             {
-                // Tạo đối tượng HistoryPayment từ dữ liệu yêu cầu
-                var historyPayment = new HistoryPayment();
-
-
-                // Gọi Service để thêm lịch sử thanh toán
-                //await _paymentService.AddPaymentHistory(historyPayment);
-
-                return Ok(new { Message = "Payment history added successfully." });
+                return NotFound(new { message = "No purchase history found" });
             }
-            catch (Exception ex)
-            {
-                return BadRequest(new { Message = ex.Message });
-            }
+
+            return Ok(orders);
         }
+
     }
 }

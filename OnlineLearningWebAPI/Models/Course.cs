@@ -27,6 +27,5 @@ public partial class Course
     public virtual ICollection<Mooc> Moocs { get; set; } = new List<Mooc>();
 
     public virtual Account Teacher { get; set; } = null!;
-    public virtual ICollection<HistoryPayment> HistoryPayments { get; set; } = new List<HistoryPayment>();
-
+    public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 }

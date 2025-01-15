@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using OnlineLearningWebAPI.Enum;
 using OnlineLearningWebAPI.Models;
 
 namespace OnlineLearningWebAPI.Data;
@@ -44,7 +45,8 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
 
     public virtual DbSet<QuizType> QuizTypes { get; set; }
 
-    public virtual DbSet<HistoryPayment> HistoryPayment { get; set; }
+    public virtual DbSet<Order> Orders { get; set; }
+    public virtual DbSet<OrderDetail> OrderDetails { get; set; }
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -81,7 +83,8 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
         ConfigureQuizAnswerEntity(modelBuilder);
         ConfigureQuizTypeEntity(modelBuilder);
         ConfigureSeekData(modelBuilder);
-        ConfigureHistoryPaymentEnity(modelBuilder);
+        ConfigureOrderEntity(modelBuilder);
+        ConfigureOrderDetailEntity(modelBuilder);
     }
 
     private void ConfigureSeekData(ModelBuilder modelBuilder)
@@ -205,25 +208,47 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
             }
         );
 
-        // Seed data for HistoryPayment
-        modelBuilder.Entity<HistoryPayment>().HasData(
-            new HistoryPayment
+        // Seed data for OrderDetail
+        modelBuilder.Entity<OrderDetail>().HasData(
+            new OrderDetail
             {
-                Id = 1,
-                UserId = "2",
+                OrderDetailId = 1,
+                OrderId = 1,
                 CourseId = 1,
-                Amount = 500000,
-                PaymentDate = new DateTime(2025, 1, 1),
-                PaymentMethod = "PayOs"
+                Price = 50.00m,
+                Quantity = 2
             },
-            new HistoryPayment
+            new OrderDetail
             {
-                Id = 2,
-                UserId = "2",
+                OrderDetailId = 2,
+                OrderId = 2,
                 CourseId = 2,
-                Amount = 750000,
-                PaymentDate = new DateTime(2025, 1, 5),
-                PaymentMethod = "PayOs"
+                Price = 200.00m,
+                Quantity = 1
+            }
+        );
+
+        // Seed data for Order
+        modelBuilder.Entity<Order>().HasData(
+            new Order
+            {
+                OrderId = 1,
+                UserId = "1",
+                OrderDate = new DateTime(2025, 1, 1),
+                TotalAmount = 100.00m,
+                PaymentMethod = "Credit Card",
+                Description = "First order by user1",
+                Status = OrderStatus.Completed // Sử dụng Enum
+            },
+            new Order
+            {
+                OrderId = 2,
+                UserId = "2",
+                OrderDate = new DateTime(2025, 1, 2),
+                TotalAmount = 200.00m,
+                PaymentMethod = "PayPal",
+                Description = "Second order by user2",
+                Status = OrderStatus.Pending // Sử dụng Enum
             }
         );
 
@@ -518,21 +543,50 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
         });
     }
 
-    private void ConfigureHistoryPaymentEnity(ModelBuilder modelBuilder)
+    private void ConfigureOrderEntity(ModelBuilder modelBuilder)
     {
-        // Quan hệ giữa HistoryPayment và Account
-        modelBuilder.Entity<HistoryPayment>()
-            .HasOne(hp => hp.User)
-            .WithMany(a => a.HistoryPayments)
-            .HasForeignKey(hp => hp.UserId)
+        // Quan hệ giữa Order và Account
+        modelBuilder.Entity<Order>()
+            .HasOne(o => o.User)
+            .WithMany(a => a.Orders)
+            .HasForeignKey(o => o.UserId)
             .HasPrincipalKey(a => a.Id);
 
-        // Quan hệ giữa HistoryPayment và Course
-        modelBuilder.Entity<HistoryPayment>()
-            .HasOne(hp => hp.Course)
-            .WithMany(c => c.HistoryPayments)
-            .HasForeignKey(hp => hp.CourseId);
+        // Cấu hình cơ bản cho Order
+        modelBuilder.Entity<Order>()
+            .Property(o => o.TotalAmount)
+            .HasColumnType("decimal(18,2)");
+
+        modelBuilder.Entity<Order>()
+            .Property(o => o.Status)
+            .HasConversion<int>(); // Ánh xạ enum thành int trong database
+
+        modelBuilder.Entity<Order>()
+            .Property(o => o.Description)
+            .HasMaxLength(500)
+            .IsUnicode(true);
     }
+
+    private void ConfigureOrderDetailEntity(ModelBuilder modelBuilder)
+    {
+        // Quan hệ giữa OrderDetail và Order
+        modelBuilder.Entity<OrderDetail>()
+            .HasOne(od => od.Order)
+            .WithMany(o => o.OrderDetails)
+            .HasForeignKey(od => od.OrderId);
+
+        // Quan hệ giữa OrderDetail và Course
+        modelBuilder.Entity<OrderDetail>()
+            .HasOne(od => od.Course)
+            .WithMany(c => c.OrderDetails)
+            .HasForeignKey(od => od.CourseId);
+
+        // Cấu hình cơ bản cho OrderDetail
+        modelBuilder.Entity<OrderDetail>()
+            .Property(od => od.Price)
+            .HasColumnType("decimal(18,2)");
+    }
+
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

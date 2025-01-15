@@ -23,6 +23,5 @@ public partial class Account : IdentityUser
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 
     public Profile? Profile { get; set; }
-    public virtual ICollection<HistoryPayment> HistoryPayments { get; set; } = new List<HistoryPayment>();
-
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }
