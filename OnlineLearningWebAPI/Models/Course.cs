@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace OnlineLearningWebAPI.Models;
+﻿namespace OnlineLearningWebAPI.Models;
 
 public partial class Course
 {
@@ -30,4 +27,5 @@ public partial class Course
     public virtual ICollection<Mooc> Moocs { get; set; } = new List<Mooc>();
 
     public virtual Account Teacher { get; set; } = null!;
+    public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 }

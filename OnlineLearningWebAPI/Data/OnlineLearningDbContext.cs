@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using OnlineLearningWebAPI.Enum;
 using OnlineLearningWebAPI.Models;
 
 namespace OnlineLearningWebAPI.Data;
@@ -44,6 +45,9 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
 
     public virtual DbSet<QuizType> QuizTypes { get; set; }
 
+    public virtual DbSet<Order> Orders { get; set; }
+    public virtual DbSet<OrderDetail> OrderDetails { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -79,6 +83,8 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
         ConfigureQuizAnswerEntity(modelBuilder);
         ConfigureQuizTypeEntity(modelBuilder);
         ConfigureSeekData(modelBuilder);
+        ConfigureOrderEntity(modelBuilder);
+        ConfigureOrderDetailEntity(modelBuilder);
     }
 
     private void ConfigureSeekData(ModelBuilder modelBuilder)
@@ -199,6 +205,50 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
                 AccountId = "2",
                 CourseId = 2,
                 FeedbackText = "The Python content is very insightful!"
+            }
+        );
+
+        // Seed data for OrderDetail
+        modelBuilder.Entity<OrderDetail>().HasData(
+            new OrderDetail
+            {
+                OrderDetailId = 1,
+                OrderId = 1,
+                CourseId = 1,
+                Price = 50.00m,
+                Quantity = 2
+            },
+            new OrderDetail
+            {
+                OrderDetailId = 2,
+                OrderId = 2,
+                CourseId = 2,
+                Price = 200.00m,
+                Quantity = 1
+            }
+        );
+
+        // Seed data for Order
+        modelBuilder.Entity<Order>().HasData(
+            new Order
+            {
+                OrderId = 1,
+                UserId = "1",
+                OrderDate = new DateTime(2025, 1, 1),
+                TotalAmount = 100.00m,
+                PaymentMethod = "Credit Card",
+                Description = "First order by user1",
+                Status = OrderStatus.Completed // Sử dụng Enum
+            },
+            new Order
+            {
+                OrderId = 2,
+                UserId = "2",
+                OrderDate = new DateTime(2025, 1, 2),
+                TotalAmount = 200.00m,
+                PaymentMethod = "PayPal",
+                Description = "Second order by user2",
+                Status = OrderStatus.Pending // Sử dụng Enum
             }
         );
 
@@ -492,6 +542,51 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
                   .OnDelete(DeleteBehavior.ClientSetNull);
         });
     }
+
+    private void ConfigureOrderEntity(ModelBuilder modelBuilder)
+    {
+        // Quan hệ giữa Order và Account
+        modelBuilder.Entity<Order>()
+            .HasOne(o => o.User)
+            .WithMany(a => a.Orders)
+            .HasForeignKey(o => o.UserId)
+            .HasPrincipalKey(a => a.Id);
+
+        // Cấu hình cơ bản cho Order
+        modelBuilder.Entity<Order>()
+            .Property(o => o.TotalAmount)
+            .HasColumnType("decimal(18,2)");
+
+        modelBuilder.Entity<Order>()
+            .Property(o => o.Status)
+            .HasConversion<int>(); // Ánh xạ enum thành int trong database
+
+        modelBuilder.Entity<Order>()
+            .Property(o => o.Description)
+            .HasMaxLength(500)
+            .IsUnicode(true);
+    }
+
+    private void ConfigureOrderDetailEntity(ModelBuilder modelBuilder)
+    {
+        // Quan hệ giữa OrderDetail và Order
+        modelBuilder.Entity<OrderDetail>()
+            .HasOne(od => od.Order)
+            .WithMany(o => o.OrderDetails)
+            .HasForeignKey(od => od.OrderId);
+
+        // Quan hệ giữa OrderDetail và Course
+        modelBuilder.Entity<OrderDetail>()
+            .HasOne(od => od.Course)
+            .WithMany(c => c.OrderDetails)
+            .HasForeignKey(od => od.CourseId);
+
+        // Cấu hình cơ bản cho OrderDetail
+        modelBuilder.Entity<OrderDetail>()
+            .Property(od => od.Price)
+            .HasColumnType("decimal(18,2)");
+    }
+
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
