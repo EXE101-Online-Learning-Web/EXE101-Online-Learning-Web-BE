@@ -10,8 +10,12 @@ namespace OnlineLearningWebAPI.Configurations
     {
         public static IServiceCollection AddServiceScopeConfig(this IServiceCollection services)
         {
+            // Add Repository Scope
+            //builder.Services.AddScoped<IRepository<Account>, AccountRepository>();
+
             services.AddScoped<IRepository<Profile>, Repository.Repository<Profile>>();
             services.AddScoped<IRepository<Account>, Repository.Repository<Account>>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
 
             services.AddScoped<ICourseRepository, CourseRepository>();
             services.AddScoped<ICourseCategoryRepository, CourseCategoryRepository>();
@@ -43,6 +47,8 @@ namespace OnlineLearningWebAPI.Configurations
 
             services.AddScoped<IFinalTestQuizRepository, FinalTestQuizRepository>();
             services.AddScoped<IFinalTestQuizService, FinalTestQuizService>();
+            services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IOrderService, OrderService>();
             return services;
         }
     }

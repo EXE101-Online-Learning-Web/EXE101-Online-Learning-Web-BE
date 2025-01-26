@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineLearningWebAPI.Data;
 
@@ -11,9 +12,11 @@ using OnlineLearningWebAPI.Data;
 namespace OnlineLearningWebAPI.Migrations
 {
     [DbContext(typeof(OnlineLearningDbContext))]
-    partial class OnlineLearningDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250114152659_OrderEntity")]
+    partial class OrderEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -272,7 +275,7 @@ namespace OnlineLearningWebAPI.Migrations
                             Id = "1",
                             AccessFailedCount = 0,
                             Avatar = "admin.png",
-                            ConcurrencyStamp = "1ec2dcea-def0-4f27-bb17-dddfece4c286",
+                            ConcurrencyStamp = "8b1b32d3-8948-4419-ab40-7de1f5e84e89",
                             Email = "admin@example.com",
                             EmailConfirmed = false,
                             IsBan = false,
@@ -280,7 +283,7 @@ namespace OnlineLearningWebAPI.Migrations
                             LockoutEnabled = false,
                             PasswordHash = "Aa1234@",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4df53dc4-c1ae-4ee7-9a8a-f7d0008dca09",
+                            SecurityStamp = "f74a2f4a-c0e7-4631-89a5-b28d2dcc05cb",
                             TwoFactorEnabled = false,
                             UserName = "admin_user"
                         },
@@ -289,7 +292,7 @@ namespace OnlineLearningWebAPI.Migrations
                             Id = "2",
                             AccessFailedCount = 0,
                             Avatar = "student.png",
-                            ConcurrencyStamp = "d15ec93b-0f8c-49db-941a-6c0092bb0990",
+                            ConcurrencyStamp = "8ecc5bfc-c397-4267-9136-a5c19415d141",
                             Email = "student@example.com",
                             EmailConfirmed = false,
                             IsBan = false,
@@ -297,7 +300,7 @@ namespace OnlineLearningWebAPI.Migrations
                             LockoutEnabled = false,
                             PasswordHash = "Aa1234@",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "aecdcf98-a227-4d37-a081-91eb6a738f3b",
+                            SecurityStamp = "66889f5b-359c-4359-af63-a92ae040301d",
                             TwoFactorEnabled = false,
                             UserName = "student_user"
                         });
@@ -399,9 +402,6 @@ namespace OnlineLearningWebAPI.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
                     b.Property<string>("TeacherId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -420,9 +420,8 @@ namespace OnlineLearningWebAPI.Migrations
                             CourseId = 1,
                             CategoryId = 1,
                             CourseTitle = "Introduction to AI",
-                            CreateDate = new DateOnly(2025, 1, 15),
+                            CreateDate = new DateOnly(2025, 1, 14),
                             Description = "Learn the fundamentals of Artificial Intelligence.",
-                            Status = 0,
                             TeacherId = "2"
                         },
                         new
@@ -430,9 +429,8 @@ namespace OnlineLearningWebAPI.Migrations
                             CourseId = 2,
                             CategoryId = 2,
                             CourseTitle = "Advanced Python Programming",
-                            CreateDate = new DateOnly(2024, 12, 16),
+                            CreateDate = new DateOnly(2024, 12, 15),
                             Description = "Master Python with advanced concepts and libraries.",
-                            Status = 1,
                             TeacherId = "2"
                         });
                 });
@@ -740,20 +738,12 @@ namespace OnlineLearningWebAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .IsUnicode(true)
-                        .HasColumnType("nvarchar(500)");
-
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PaymentMethod")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
 
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("decimal(18,2)");
@@ -772,20 +762,16 @@ namespace OnlineLearningWebAPI.Migrations
                         new
                         {
                             OrderId = 1,
-                            Description = "First order by user1",
                             OrderDate = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             PaymentMethod = "Credit Card",
-                            Status = 1,
                             TotalAmount = 100.00m,
-                            UserId = "1"
+                            UserId = "2"
                         },
                         new
                         {
                             OrderId = 2,
-                            Description = "Second order by user2",
                             OrderDate = new DateTime(2025, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             PaymentMethod = "PayPal",
-                            Status = 0,
                             TotalAmount = 200.00m,
                             UserId = "2"
                         });

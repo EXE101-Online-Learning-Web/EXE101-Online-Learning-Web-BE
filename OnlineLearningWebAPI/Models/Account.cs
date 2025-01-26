@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace OnlineLearningWebAPI.Models;
 
@@ -25,4 +23,5 @@ public partial class Account : IdentityUser
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 
     public Profile? Profile { get; set; }
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

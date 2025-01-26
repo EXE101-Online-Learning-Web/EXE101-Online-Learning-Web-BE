@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineLearningWebAPI.Data;
 
@@ -11,9 +12,11 @@ using OnlineLearningWebAPI.Data;
 namespace OnlineLearningWebAPI.Migrations
 {
     [DbContext(typeof(OnlineLearningDbContext))]
-    partial class OnlineLearningDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250101053633_Update Seed Data")]
+    partial class UpdateSeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -272,7 +275,7 @@ namespace OnlineLearningWebAPI.Migrations
                             Id = "1",
                             AccessFailedCount = 0,
                             Avatar = "admin.png",
-                            ConcurrencyStamp = "1ec2dcea-def0-4f27-bb17-dddfece4c286",
+                            ConcurrencyStamp = "60034531-9265-4184-8390-0dca2a54af7e",
                             Email = "admin@example.com",
                             EmailConfirmed = false,
                             IsBan = false,
@@ -280,7 +283,7 @@ namespace OnlineLearningWebAPI.Migrations
                             LockoutEnabled = false,
                             PasswordHash = "Aa1234@",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4df53dc4-c1ae-4ee7-9a8a-f7d0008dca09",
+                            SecurityStamp = "f9fc37e0-a715-40da-b283-3f3f919909ec",
                             TwoFactorEnabled = false,
                             UserName = "admin_user"
                         },
@@ -289,7 +292,7 @@ namespace OnlineLearningWebAPI.Migrations
                             Id = "2",
                             AccessFailedCount = 0,
                             Avatar = "student.png",
-                            ConcurrencyStamp = "d15ec93b-0f8c-49db-941a-6c0092bb0990",
+                            ConcurrencyStamp = "5200e7a6-8ffc-4dcd-b926-ca192b80570b",
                             Email = "student@example.com",
                             EmailConfirmed = false,
                             IsBan = false,
@@ -297,7 +300,7 @@ namespace OnlineLearningWebAPI.Migrations
                             LockoutEnabled = false,
                             PasswordHash = "Aa1234@",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "aecdcf98-a227-4d37-a081-91eb6a738f3b",
+                            SecurityStamp = "ba179ee7-747e-4df9-9b82-8132aa58178f",
                             TwoFactorEnabled = false,
                             UserName = "student_user"
                         });
@@ -399,9 +402,6 @@ namespace OnlineLearningWebAPI.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
                     b.Property<string>("TeacherId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -420,9 +420,8 @@ namespace OnlineLearningWebAPI.Migrations
                             CourseId = 1,
                             CategoryId = 1,
                             CourseTitle = "Introduction to AI",
-                            CreateDate = new DateOnly(2025, 1, 15),
+                            CreateDate = new DateOnly(2025, 1, 1),
                             Description = "Learn the fundamentals of Artificial Intelligence.",
-                            Status = 0,
                             TeacherId = "2"
                         },
                         new
@@ -430,9 +429,8 @@ namespace OnlineLearningWebAPI.Migrations
                             CourseId = 2,
                             CategoryId = 2,
                             CourseTitle = "Advanced Python Programming",
-                            CreateDate = new DateOnly(2024, 12, 16),
+                            CreateDate = new DateOnly(2024, 12, 2),
                             Description = "Master Python with advanced concepts and libraries.",
-                            Status = 1,
                             TeacherId = "2"
                         });
                 });
@@ -730,112 +728,6 @@ namespace OnlineLearningWebAPI.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("MOOC", (string)null);
-                });
-
-            modelBuilder.Entity("OnlineLearningWebAPI.Models.Order", b =>
-                {
-                    b.Property<int>("OrderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .IsUnicode(true)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("PaymentMethod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("OrderId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Orders");
-
-                    b.HasData(
-                        new
-                        {
-                            OrderId = 1,
-                            Description = "First order by user1",
-                            OrderDate = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PaymentMethod = "Credit Card",
-                            Status = 1,
-                            TotalAmount = 100.00m,
-                            UserId = "1"
-                        },
-                        new
-                        {
-                            OrderId = 2,
-                            Description = "Second order by user2",
-                            OrderDate = new DateTime(2025, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PaymentMethod = "PayPal",
-                            Status = 0,
-                            TotalAmount = 200.00m,
-                            UserId = "2"
-                        });
-                });
-
-            modelBuilder.Entity("OnlineLearningWebAPI.Models.OrderDetail", b =>
-                {
-                    b.Property<int>("OrderDetailId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderDetailId"));
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("OrderDetailId");
-
-                    b.HasIndex("CourseId");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("OrderDetails");
-
-                    b.HasData(
-                        new
-                        {
-                            OrderDetailId = 1,
-                            CourseId = 1,
-                            OrderId = 1,
-                            Price = 50.00m,
-                            Quantity = 2
-                        },
-                        new
-                        {
-                            OrderDetailId = 2,
-                            CourseId = 2,
-                            OrderId = 2,
-                            Price = 200.00m,
-                            Quantity = 1
-                        });
                 });
 
             modelBuilder.Entity("OnlineLearningWebAPI.Models.Profile", b =>
@@ -1149,36 +1041,6 @@ namespace OnlineLearningWebAPI.Migrations
                     b.Navigation("Course");
                 });
 
-            modelBuilder.Entity("OnlineLearningWebAPI.Models.Order", b =>
-                {
-                    b.HasOne("OnlineLearningWebAPI.Models.Account", "User")
-                        .WithMany("Orders")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("OnlineLearningWebAPI.Models.OrderDetail", b =>
-                {
-                    b.HasOne("OnlineLearningWebAPI.Models.Course", "Course")
-                        .WithMany("OrderDetails")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OnlineLearningWebAPI.Models.Order", "Order")
-                        .WithMany("OrderDetails")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("Order");
-                });
-
             modelBuilder.Entity("OnlineLearningWebAPI.Models.Profile", b =>
                 {
                     b.HasOne("OnlineLearningWebAPI.Models.Account", "Account")
@@ -1231,8 +1093,6 @@ namespace OnlineLearningWebAPI.Migrations
 
                     b.Navigation("Feedbacks");
 
-                    b.Navigation("Orders");
-
                     b.Navigation("Profile");
                 });
 
@@ -1247,8 +1107,6 @@ namespace OnlineLearningWebAPI.Migrations
                     b.Navigation("FinalTests");
 
                     b.Navigation("Moocs");
-
-                    b.Navigation("OrderDetails");
                 });
 
             modelBuilder.Entity("OnlineLearningWebAPI.Models.CourseCategory", b =>
@@ -1269,11 +1127,6 @@ namespace OnlineLearningWebAPI.Migrations
             modelBuilder.Entity("OnlineLearningWebAPI.Models.Mooc", b =>
                 {
                     b.Navigation("ExamTests");
-                });
-
-            modelBuilder.Entity("OnlineLearningWebAPI.Models.Order", b =>
-                {
-                    b.Navigation("OrderDetails");
                 });
 
             modelBuilder.Entity("OnlineLearningWebAPI.Models.Quiz", b =>

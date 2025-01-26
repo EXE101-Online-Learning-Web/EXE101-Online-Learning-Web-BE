@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using OnlineLearningWebAPI.Enum;
 
 namespace OnlineLearningWebAPI.Models;
 
@@ -17,6 +16,8 @@ public partial class Course
 
     public int CategoryId { get; set; }
 
+    public CourseStatus Status { get; set; } = CourseStatus.Pending; // Giá trị mặc định là Pending
+
     public virtual CourseCategory Category { get; set; } = null!;
 
     public virtual ICollection<CourseEnrollment> CourseEnrollments { get; set; } = new List<CourseEnrollment>();
@@ -30,4 +31,5 @@ public partial class Course
     public virtual ICollection<Mooc> Moocs { get; set; } = new List<Mooc>();
 
     public virtual Account Teacher { get; set; } = null!;
+    public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 }

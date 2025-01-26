@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace OnlineLearningWebAPI.Controllers
@@ -13,6 +12,16 @@ namespace OnlineLearningWebAPI.Controllers
         public IActionResult GetProtectedData()
         {
             return Ok(new { Message = "This is a protected endpoint!" });
+        }
+        [HttpGet("Success")]
+        public IActionResult Success()
+        {
+            return Ok(new { Message = "Success" });
+        }
+        [HttpGet("Fail")]
+        public IActionResult Fail()
+        {
+            return Ok(new { Message = "Success" });
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineLearningWebAPI.Data;
 
@@ -11,9 +12,11 @@ using OnlineLearningWebAPI.Data;
 namespace OnlineLearningWebAPI.Migrations
 {
     [DbContext(typeof(OnlineLearningDbContext))]
-    partial class OnlineLearningDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250114160117_MapOrderStatusEnum")]
+    partial class MapOrderStatusEnum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -272,7 +275,7 @@ namespace OnlineLearningWebAPI.Migrations
                             Id = "1",
                             AccessFailedCount = 0,
                             Avatar = "admin.png",
-                            ConcurrencyStamp = "1ec2dcea-def0-4f27-bb17-dddfece4c286",
+                            ConcurrencyStamp = "1a651ba2-c82f-43e5-b08c-99e8306656c3",
                             Email = "admin@example.com",
                             EmailConfirmed = false,
                             IsBan = false,
@@ -280,7 +283,7 @@ namespace OnlineLearningWebAPI.Migrations
                             LockoutEnabled = false,
                             PasswordHash = "Aa1234@",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4df53dc4-c1ae-4ee7-9a8a-f7d0008dca09",
+                            SecurityStamp = "e46fe438-b72a-4b8e-8798-2e151565e928",
                             TwoFactorEnabled = false,
                             UserName = "admin_user"
                         },
@@ -289,7 +292,7 @@ namespace OnlineLearningWebAPI.Migrations
                             Id = "2",
                             AccessFailedCount = 0,
                             Avatar = "student.png",
-                            ConcurrencyStamp = "d15ec93b-0f8c-49db-941a-6c0092bb0990",
+                            ConcurrencyStamp = "f5992082-8499-4d3d-bbf5-026abd54b117",
                             Email = "student@example.com",
                             EmailConfirmed = false,
                             IsBan = false,
@@ -297,7 +300,7 @@ namespace OnlineLearningWebAPI.Migrations
                             LockoutEnabled = false,
                             PasswordHash = "Aa1234@",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "aecdcf98-a227-4d37-a081-91eb6a738f3b",
+                            SecurityStamp = "54990a8a-efad-4343-94c1-19de858e28b3",
                             TwoFactorEnabled = false,
                             UserName = "student_user"
                         });
@@ -399,9 +402,6 @@ namespace OnlineLearningWebAPI.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
                     b.Property<string>("TeacherId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -420,9 +420,8 @@ namespace OnlineLearningWebAPI.Migrations
                             CourseId = 1,
                             CategoryId = 1,
                             CourseTitle = "Introduction to AI",
-                            CreateDate = new DateOnly(2025, 1, 15),
+                            CreateDate = new DateOnly(2025, 1, 14),
                             Description = "Learn the fundamentals of Artificial Intelligence.",
-                            Status = 0,
                             TeacherId = "2"
                         },
                         new
@@ -430,9 +429,8 @@ namespace OnlineLearningWebAPI.Migrations
                             CourseId = 2,
                             CategoryId = 2,
                             CourseTitle = "Advanced Python Programming",
-                            CreateDate = new DateOnly(2024, 12, 16),
+                            CreateDate = new DateOnly(2024, 12, 15),
                             Description = "Master Python with advanced concepts and libraries.",
-                            Status = 1,
                             TeacherId = "2"
                         });
                 });
