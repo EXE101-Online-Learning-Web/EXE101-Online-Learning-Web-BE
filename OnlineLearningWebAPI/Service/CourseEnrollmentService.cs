@@ -1,4 +1,5 @@
 ﻿using OnlineLearningWebAPI.DTOs.request.CourseEnrollmentRequest;
+using OnlineLearningWebAPI.DTOs.Response.CourseEnrollmentResponse;
 using OnlineLearningWebAPI.Models;
 using OnlineLearningWebAPI.Repository.IRepository;
 using OnlineLearningWebAPI.Service.IService;

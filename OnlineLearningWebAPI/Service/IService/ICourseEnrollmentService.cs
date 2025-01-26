@@ -1,4 +1,5 @@
 ﻿using OnlineLearningWebAPI.DTOs.request.CourseEnrollmentRequest;
+using OnlineLearningWebAPI.DTOs.Response.CourseEnrollmentResponse;
 
 namespace OnlineLearningWebAPI.Service.IService
 {

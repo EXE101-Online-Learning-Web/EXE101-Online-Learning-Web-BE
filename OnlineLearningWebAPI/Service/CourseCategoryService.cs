@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnlineLearningWebAPI.DTOs;
 using OnlineLearningWebAPI.DTOs.request.CourseCategoryRequest;
+using OnlineLearningWebAPI.DTOs.Response.CourseCategoryResponse;
 using OnlineLearningWebAPI.Models;
 using OnlineLearningWebAPI.Repository.IRepository;
 using OnlineLearningWebAPI.Service.IService;

@@ -1,4 +1,4 @@
-﻿namespace OnlineLearningWebAPI.DTOs.request.CourseEnrollmentRequest
+﻿namespace OnlineLearningWebAPI.DTOs.Response.CourseEnrollmentResponse
 {
     public class CourseEnrollmentDTO
     {

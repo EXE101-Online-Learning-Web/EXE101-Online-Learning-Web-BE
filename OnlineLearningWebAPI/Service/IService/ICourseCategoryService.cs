@@ -1,5 +1,6 @@
 ﻿using OnlineLearningWebAPI.DTOs;
 using OnlineLearningWebAPI.DTOs.request.CourseCategoryRequest;
+using OnlineLearningWebAPI.DTOs.Response.CourseCategoryResponse;
 
 namespace OnlineLearningWebAPI.Service.IService
 {

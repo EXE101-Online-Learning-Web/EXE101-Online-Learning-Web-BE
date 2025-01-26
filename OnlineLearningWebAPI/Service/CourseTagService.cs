@@ -1,4 +1,5 @@
 ﻿using OnlineLearningWebAPI.DTOs.request.CourseTag;
+using OnlineLearningWebAPI.DTOs.Response.CourseTagResponse;
 using OnlineLearningWebAPI.Models;
 using OnlineLearningWebAPI.Repository.IRepository;
 using OnlineLearningWebAPI.Service.IService;

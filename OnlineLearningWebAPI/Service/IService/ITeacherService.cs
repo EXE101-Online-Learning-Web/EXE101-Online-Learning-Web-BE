@@ -1,5 +1,6 @@
 ﻿using OnlineLearningWebAPI.DTOs;
 using OnlineLearningWebAPI.DTOs.request.TeacherRequest;
+using OnlineLearningWebAPI.DTOs.Response.TeacherResponse;
 
 namespace OnlineLearningWebAPI.Service.IService
 {

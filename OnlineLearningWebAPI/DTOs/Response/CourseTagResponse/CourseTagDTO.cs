@@ -1,4 +1,4 @@
-﻿namespace OnlineLearningWebAPI.DTOs.request.CourseTag
+﻿namespace OnlineLearningWebAPI.DTOs.Response.CourseTagResponse
 {
     public class CourseTagDTO
     {

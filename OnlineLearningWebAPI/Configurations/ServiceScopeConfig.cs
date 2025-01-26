@@ -29,6 +29,20 @@ namespace OnlineLearningWebAPI.Configurations
             services.AddScoped<ICourseEnrollmentService, CourseEnrollmentService>();
             services.AddScoped<IMoocService, MoocService>();
 
+            services.AddScoped<IQuizAnswerRepository, QuizAnswerRepository>();
+            services.AddScoped<IQuizAnswerService, QuizAnswerService>();
+
+            services.AddScoped<IQuizRepository, QuizRepository>();
+            services.AddScoped<IQuizService, QuizService>();
+
+            services.AddScoped<IExamTestRepository, ExamTestRepository>();
+            services.AddScoped<IExamTestService, ExamTestService>();
+
+            services.AddScoped<IFinalTestRepository, FinalTestRepository>();
+            services.AddScoped<IFinalTestService, FinalTestService>();
+
+            services.AddScoped<IFinalTestQuizRepository, FinalTestQuizRepository>();
+            services.AddScoped<IFinalTestQuizService, FinalTestQuizService>();
             return services;
         }
     }

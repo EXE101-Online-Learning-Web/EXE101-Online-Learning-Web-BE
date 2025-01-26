@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using OnlineLearningWebAPI.DTOs.request.TeacherRequest;
+using OnlineLearningWebAPI.DTOs.Response.TeacherResponse;
 using OnlineLearningWebAPI.Models;
 using OnlineLearningWebAPI.Service.IService;
 
