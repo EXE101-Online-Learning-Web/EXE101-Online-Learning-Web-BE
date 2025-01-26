@@ -1,4 +1,4 @@
-﻿namespace OnlineLearningWebAPI.DTOs.request.CourseCategoryRequest
+﻿namespace OnlineLearningWebAPI.DTOs.Response.CourseCategoryResponse
 {
     public class CourseCategoryWithCoursesDTO
     {

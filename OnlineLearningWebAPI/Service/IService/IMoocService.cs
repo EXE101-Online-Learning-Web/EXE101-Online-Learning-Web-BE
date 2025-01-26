@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using OnlineLearningWebAPI.DTOs.request.MoocRequest;
 
-namespace OnlineLearningWebAPI.Service.IService
+namespace OnlineLearningWebAPI.Service.IService;
+
+public interface IMoocService
 {
-    public class IMoocService : Controller
-    {
-        public IActionResult Index()
-        {
-            return View();
-        }
-    }
+    Task<IEnumerable<MoocDTO>> GetAllMoocsAsync();
+    Task<MoocDTO?> GetMoocByIdAsync(int id);
+    Task<bool> CreateMoocAsync(CreateMoocDTO createMoocDTO);
+    Task<bool> UpdateMoocAsync(int id, UpdateMoocDTO updateMoocDTO);
+    Task<bool> DeleteMoocAsync(int id);
+    Task<IEnumerable<MoocDTO>> GetMoocsByCourseIdAsync(int courseId);
 }

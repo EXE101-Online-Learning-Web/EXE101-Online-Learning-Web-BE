@@ -1,4 +1,6 @@
-﻿namespace OnlineLearningWebAPI.Models;
+﻿using OnlineLearningWebAPI.Enum;
+
+namespace OnlineLearningWebAPI.Models;
 
 public partial class Course
 {
@@ -13,6 +15,8 @@ public partial class Course
     public DateOnly? CreateDate { get; set; }
 
     public int CategoryId { get; set; }
+
+    public CourseStatus Status { get; set; } = CourseStatus.Pending; // Giá trị mặc định là Pending
 
     public virtual CourseCategory Category { get; set; } = null!;
 
