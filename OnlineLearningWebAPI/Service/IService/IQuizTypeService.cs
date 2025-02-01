@@ -1,4 +1,5 @@
 ﻿using OnlineLearningWebAPI.DTOs;
+using OnlineLearningWebAPI.DTOs.response.QuizType;
 
 namespace OnlineLearningWebAPI.Service.IService
 {
