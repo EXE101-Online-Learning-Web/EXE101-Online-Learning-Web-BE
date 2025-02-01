@@ -1,4 +1,5 @@
 ﻿using OnlineLearningWebAPI.DTOs;
+using OnlineLearningWebAPI.DTOs.response.QuizType;
 using OnlineLearningWebAPI.Models;
 using OnlineLearningWebAPI.Repository.IRepository;
 using OnlineLearningWebAPI.Service.IService;
