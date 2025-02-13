@@ -49,6 +49,8 @@ namespace OnlineLearningWebAPI.Configurations
             services.AddScoped<IFinalTestQuizService, FinalTestQuizService>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IOrderService, OrderService>();
+
+            services.AddScoped<IOpenAIService, OpenAIService>();
             return services;
         }
     }
