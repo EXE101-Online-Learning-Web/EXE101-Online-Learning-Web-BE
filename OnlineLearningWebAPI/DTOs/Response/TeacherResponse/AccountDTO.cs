@@ -1,6 +1,6 @@
 ﻿namespace OnlineLearningWebAPI.DTOs.Response.TeacherResponse
 {
-    public class TeacherAccountDTO
+    public class AccountDTO
     {
         public string Id { get; set; } = null!;
         public string Email { get; set; } = null!;

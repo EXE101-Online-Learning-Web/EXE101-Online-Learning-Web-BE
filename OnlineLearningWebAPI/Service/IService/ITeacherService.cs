@@ -6,8 +6,10 @@ namespace OnlineLearningWebAPI.Service.IService
 {
     public interface ITeacherService  
     {
-        Task<TeacherAccountDTO?> GetTeacherByIdAsync(string id);
-        Task<List<TeacherAccountDTO>> GetAllTeachersAsync();
-        Task<bool> UpdateTeacherDetailsAsync(string id, UpdateTeacherDTO updateTeacherDTO);
+        Task<AccountDTO?> GetTeacherByIdAsync(string id);
+        Task<List<AccountDTO>> GetAllTeachersAsync();
+        Task<bool> UpdateTeacherDetailsAsync(string id, UpdateAccountDTO updateTeacherDTO);
+        Task<bool> BanTeacherAsync(string id);
+        Task<bool> UnbanTeacherAsync(string id);
     }
 }

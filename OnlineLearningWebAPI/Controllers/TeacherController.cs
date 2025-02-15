@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OnlineLearningWebAPI.DTOs.request.TeacherRequest;
 using OnlineLearningWebAPI.Service.IService;
 
 namespace OnlineLearningWebAPI.Controllers
 {
+    [Route("api/teachers")]
+    [Controller]
     public class TeacherController : Controller
     {
         private readonly ITeacherService _teacherService;
@@ -33,11 +36,32 @@ namespace OnlineLearningWebAPI.Controllers
 
         // PUT: api/teachers/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTeacher(string id, [FromBody] UpdateTeacherDTO teacherDTO)
+        public async Task<IActionResult> UpdateTeacher(string id, [FromBody] UpdateAccountDTO teacherDTO)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var isUpdated = await _teacherService.UpdateTeacherDetailsAsync(id, teacherDTO);
+            if (!isUpdated) return NotFound(new { message = "[TeacherController] | GetTeacher | Teacher not found" });
+
+            return NoContent();
+        }
+        [HttpPut("ban/{id}")]
+        [Authorize(Policy = "RequireAdminRole")]
+        public async Task<IActionResult> BanTeacher(string id)
+        {
+
+            var isUpdated = await _teacherService.BanTeacherAsync(id);
+            if (!isUpdated) return NotFound(new { message = "[TeacherController] | GetTeacher | Teacher not found" });
+
+            return NoContent();
+        }
+
+        [HttpPut("unban/{id}")]
+        [Authorize(Policy = "RequireAdminRole")]
+        public async Task<IActionResult> UnbanTeacher(string id)
+        {
+
+            var isUpdated = await _teacherService.UnbanTeacherAsync(id);
             if (!isUpdated) return NotFound(new { message = "[TeacherController] | GetTeacher | Teacher not found" });
 
             return NoContent();

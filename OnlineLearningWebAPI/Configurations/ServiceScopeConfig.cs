@@ -27,6 +27,7 @@ namespace OnlineLearningWebAPI.Configurations
             services.AddScoped<IProfileService, ProfileService>();
 
             services.AddScoped<ITeacherService, TeacherService>();
+            services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<ICourseCategoryService, CourseCategoryService>();
             services.AddScoped<ICourseTagService, CourseTagService>();
