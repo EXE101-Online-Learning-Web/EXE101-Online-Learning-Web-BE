@@ -19,17 +19,17 @@ namespace OnlineLearningWebAPI.Service
             _logger = logger;
         }
 
-        public async Task<List<TeacherAccountDTO>> GetAllTeachersAsync()
+        public async Task<List<AccountDTO>> GetAllTeachersAsync()
         {
             var accounts = _userManager.Users.ToList(); 
-            var teacherAccounts = new List<TeacherAccountDTO>();
+            var teacherAccounts = new List<AccountDTO>();
 
             foreach (var account in accounts)
             {
                 var roles = await _userManager.GetRolesAsync(account);
                 if (roles.Contains(TEACHER_ROLE))
                 {
-                    teacherAccounts.Add(new TeacherAccountDTO
+                    teacherAccounts.Add(new AccountDTO
                     {
                         Id = account.Id,
                         Email = account.Email,
@@ -44,7 +44,60 @@ namespace OnlineLearningWebAPI.Service
             return teacherAccounts;
         }
 
-        async Task<TeacherAccountDTO?> ITeacherService.GetTeacherByIdAsync(string id)
+        public async Task<bool> BanTeacherAsync(string id)
+        {
+            var teacher = await _userManager.FindByIdAsync(id);
+            if (teacher == null)
+            {
+                _logger.LogError($"[TeacherService] | BanTeacherAsync | Teacher not found with ID: {id}");
+                return false;
+            }
+
+            if (teacher.IsBan.HasValue && teacher.IsBan.Value)
+            {
+                _logger.LogError($"[TeacherService] | BanTeacherAsync | Teacher with ID: {id} was already baned");
+                return false;
+            }
+
+            var roles = await _userManager.GetRolesAsync(teacher);
+            if (!roles.Contains(TEACHER_ROLE))
+            {
+                _logger.LogError($"[TeacherService] | BanTeacherAsync | Teacher with ID: {id} does not have the required role: {TEACHER_ROLE}");
+                return false;
+            }
+
+            teacher.IsBan = true;
+            await _userManager.UpdateAsync(teacher);
+            return true;
+        }
+        public async Task<bool> UnbanTeacherAsync(string id)
+        {
+            var teacher = await _userManager.FindByIdAsync(id);
+            if (teacher == null)
+            {
+                _logger.LogError($"[TeacherService] | BanTeacherAsync | Teacher not found with ID: {id}");
+                return false;
+            }
+
+            if (!(teacher.IsBan.HasValue && teacher.IsBan.Value))
+            {
+                _logger.LogError($"[TeacherService] | UnbanTeacherAsync | Teacher with ID: {id} was not baned");
+                return false;
+            }
+
+            var roles = await _userManager.GetRolesAsync(teacher);
+            if (!roles.Contains(TEACHER_ROLE))
+            {
+                _logger.LogError($"[TeacherService] | BanTeacherAsync | Teacher with ID: {id} does not have the required role: {TEACHER_ROLE}");
+                return false;
+            }
+
+            teacher.IsBan = false;
+            await _userManager.UpdateAsync(teacher);
+            return true;
+        }
+
+        async Task<AccountDTO?> ITeacherService.GetTeacherByIdAsync(string id)
         {
             var teacher = await _userManager.FindByIdAsync(id);
             if (teacher == null)
@@ -60,7 +113,7 @@ namespace OnlineLearningWebAPI.Service
                 return null;
             }
 
-            return new TeacherAccountDTO
+            return new AccountDTO
             {
                 Id = teacher.Id,
                 UserName = teacher.UserName,
@@ -71,7 +124,7 @@ namespace OnlineLearningWebAPI.Service
             };
         }
 
-        async Task<bool> ITeacherService.UpdateTeacherDetailsAsync(string id, UpdateTeacherDTO updateTeacherDTO)
+        async Task<bool> ITeacherService.UpdateTeacherDetailsAsync(string id, UpdateAccountDTO updateTeacherDTO)
         {
             var teacher = await _userManager.FindByIdAsync(id);
             if (teacher == null)

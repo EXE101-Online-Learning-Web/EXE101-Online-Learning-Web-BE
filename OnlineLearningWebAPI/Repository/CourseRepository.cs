@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnlineLearningWebAPI.Data;
+using OnlineLearningWebAPI.Enum;
 using OnlineLearningWebAPI.Models;
 using OnlineLearningWebAPI.Repository.IRepository;
 
@@ -26,6 +27,12 @@ namespace OnlineLearningWebAPI.Repository
             return await _context.Courses
                 .Where(c => c.CategoryId == categoryId)
                 .ToListAsync();
+        }
+
+        public async Task<bool> UpdateStatusAsync(List<int> ids, CourseStatus status)
+        {
+            var effectRows = await _context.Courses.Where(x => ids.Contains(x.CourseId)).ExecuteUpdateAsync(x => x.SetProperty(c => c.Status, status));
+            return effectRows > 0;
         }
     }
 }

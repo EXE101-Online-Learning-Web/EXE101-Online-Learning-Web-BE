@@ -2,7 +2,7 @@
 
 namespace OnlineLearningWebAPI.DTOs.request.TeacherRequest
 {
-    public class UpdateTeacherDTO
+    public class UpdateAccountDTO
     {
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email format")]

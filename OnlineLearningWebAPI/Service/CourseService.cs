@@ -103,5 +103,15 @@ namespace OnlineLearningWebAPI.Service
                 TeacherId = c.TeacherId,
             });
         }
+
+        public async Task<bool> ApproveCourseAsync(int id)
+        {
+            var course = await _courseRepository.GetByIdAsync(id);
+            if(course == null || course.Status != Enum.CourseStatus.Pending)
+            {
+                return false;
+            }
+            return await _courseRepository.UpdateStatusAsync([id], Enum.CourseStatus.Approved);
+        }
     }
 }

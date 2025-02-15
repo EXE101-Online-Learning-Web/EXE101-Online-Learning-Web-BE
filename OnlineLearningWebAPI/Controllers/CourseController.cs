@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OnlineLearningWebAPI.DTOs.request.CourseRequest;
 using OnlineLearningWebAPI.Service.IService;
 
@@ -56,6 +57,16 @@ namespace OnlineLearningWebAPI.Controllers
             if (!result) return NotFound(new { message = "Course not found or delete failed" });
 
             return Ok(new { message = "Course deleted successfully" });
+        }
+
+        [HttpPut("approve/{id}")]
+        [Authorize(Policy = "RequireAdminRole")]
+        public async Task<IActionResult> ApproveCourse(int id)
+        {
+            var result = await _courseService.ApproveCourseAsync(id);
+            if (!result) return BadRequest(new { message = "Course not found or not pending" });
+
+            return Ok(new { message = "Course approved successfully" });
         }
     }
 }
