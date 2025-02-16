@@ -234,6 +234,7 @@ namespace OnlineLearningWebAPI.Controllers
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), // Unique token ID
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim("emailConfirmed", user.EmailConfirmed.ToString())
             };
 
             // Lấy danh sách roles của user từ database
