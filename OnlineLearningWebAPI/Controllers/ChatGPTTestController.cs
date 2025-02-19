@@ -15,7 +15,7 @@ namespace OnlineLearningWebAPI.Controllers
             _serviceProvider = serviceProvider;
         }
 
-        [HttpGet("Login")]
+        [HttpGet("get-answer")]
         public async Task<IActionResult> GetAnswer(string question)
         {
             if (!ModelState.IsValid)
