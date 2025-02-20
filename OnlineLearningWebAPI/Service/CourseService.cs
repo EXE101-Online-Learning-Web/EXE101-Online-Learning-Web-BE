@@ -11,16 +11,19 @@ namespace OnlineLearningWebAPI.Service
     {
         private readonly ICourseRepository _courseRepository;
         private readonly ICourseTagService _courseTagService;
+        private readonly ICourseCategoryService _courseCategoryService;
 
-        public CourseService(ICourseRepository courseRepository, ICourseTagService courseTagService)
+        public CourseService(ICourseRepository courseRepository, ICourseTagService courseTagService, ICourseCategoryService courseCategoryService)
         {
             _courseRepository = courseRepository;
             _courseTagService = courseTagService;
+            _courseCategoryService = courseCategoryService;
         }
 
         public async Task<IEnumerable<CourseDTO>> GetAllCoursesAsync()
         {
             var courses = await _courseRepository.GetAllAsync();
+            var categories = await _courseCategoryService.GetAllCategoriesAsync();
             return courses.Select(c => new CourseDTO
             {
                 CourseId = c.CourseId,
@@ -28,6 +31,7 @@ namespace OnlineLearningWebAPI.Service
                 Description = c.Description,
                 TeacherId = c.TeacherId,
                 CreateDate = c.CreateDate,
+                CategoryName = categories.First(cate => cate.CategoryId == c.CategoryId).Name,
                 Price = c.Price,
                 ImageURL = c.ImageURL,
                 Status = c.Status,
@@ -38,8 +42,9 @@ namespace OnlineLearningWebAPI.Service
         {
             var course = await _courseRepository.GetByIdAsync(id);
             var courseTags = await _courseTagService.GetTagsByCourseIdAsync(id);
-            if (course == null) return null;
+            var categories = await _courseCategoryService.GetAllCategoriesAsync();
 
+            if (course == null) return null;
             return new CourseDTO
             {
                 CourseId = course.CourseId,
@@ -48,6 +53,7 @@ namespace OnlineLearningWebAPI.Service
                 TeacherId = course.TeacherId,
                 CreateDate = course.CreateDate,
                 Price = course.Price,
+                CategoryName = categories.First(cate => cate.CategoryId == course.CategoryId).Name,
                 ImageURL = course.ImageURL,
                 Status = course.Status,
                 CourseTags = courseTags,
@@ -102,6 +108,7 @@ namespace OnlineLearningWebAPI.Service
         public async Task<IEnumerable<CourseDTO>> GetCoursesByTeacherIdAsync(string teacherId)
         {
             var courses = await _courseRepository.GetCoursesByTeacherIdAsync(teacherId);
+            var categories = await _courseCategoryService.GetAllCategoriesAsync();
             return courses.Select(course => new CourseDTO
             {
                 CourseId = course.CourseId,
@@ -109,6 +116,7 @@ namespace OnlineLearningWebAPI.Service
                 Description = course.Description,
                 TeacherId = course.TeacherId,
                 CreateDate = course.CreateDate,
+                CategoryName = categories.First(cate => cate.CategoryId == course.CategoryId).Name,
                 Price = course.Price,
                 ImageURL = course.ImageURL,
                 Status = course.Status,
@@ -118,12 +126,14 @@ namespace OnlineLearningWebAPI.Service
         public async Task<IEnumerable<CourseDTO>> GetCoursesByCategoryIdAsync(int categoryId)
         {
             var courses = await _courseRepository.GetCoursesByCategoryIdAsync(categoryId);
+            var categories = await _courseCategoryService.GetAllCategoriesAsync();
             return courses.Select(course => new CourseDTO
             {
                 CourseId = course.CourseId,
                 CourseTitle = course.CourseTitle,
                 Description = course.Description,
                 TeacherId = course.TeacherId,
+                CategoryName = categories.First(cate => cate.CategoryId == course.CategoryId).Name,
                 CreateDate = course.CreateDate,
                 Price = course.Price,
                 ImageURL = course.ImageURL,

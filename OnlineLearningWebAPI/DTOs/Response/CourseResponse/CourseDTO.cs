@@ -12,9 +12,9 @@ namespace OnlineLearningWebAPI.DTOs.Response.CourseResponse
         public string? Description { get; set; }
         public string TeacherId { get; set; } = null!;
         public DateOnly? CreateDate { get; set; }
-        public int CategoryId { get; set; }
+        public string CategoryName { get; set; }
         public int Price { get; set; }
-        public string? ImageURL { get; set; } = null!;
+        public string ImageURL { get; set; }
         public CourseStatus Status { get; set; }
         public IEnumerable<CourseTagDTO> CourseTags { get; set; }
     }
