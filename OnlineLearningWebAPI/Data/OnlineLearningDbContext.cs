@@ -59,8 +59,10 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
                 .Build();
             optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
         }
-        optionsBuilder.EnableSensitiveDataLogging();
+
+        optionsBuilder.EnableSensitiveDataLogging(false);
     }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
