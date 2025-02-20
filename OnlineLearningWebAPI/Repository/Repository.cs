@@ -31,7 +31,7 @@ namespace OnlineLearningWebAPI.Repository
 
         public async Task<TEntity?> GetByIdAsync(int id)
         {
-            return await _context.Set<TEntity>().FirstOrDefaultAsync();
+            return await _context.Set<TEntity>().FindAsync(id);
         }
 
         public IQueryable<TEntity> GetQuery()

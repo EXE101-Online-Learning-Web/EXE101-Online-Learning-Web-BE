@@ -16,6 +16,10 @@ public partial class Course
 
     public int CategoryId { get; set; }
 
+    public int Price { get; set; }
+
+    public string? ImageURL { get; set; } = null!;
+
     public CourseStatus Status { get; set; } = CourseStatus.Pending; // Giá trị mặc định là Pending
 
     public virtual CourseCategory Category { get; set; } = null!;

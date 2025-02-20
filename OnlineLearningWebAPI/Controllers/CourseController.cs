@@ -16,7 +16,7 @@ namespace OnlineLearningWebAPI.Controllers
             _courseService = courseService;
         }
 
-        [HttpGet]
+        [HttpGet("/api/Courses")]
         public async Task<IActionResult> GetAllCourses()
         {
             var courses = await _courseService.GetAllCoursesAsync();
