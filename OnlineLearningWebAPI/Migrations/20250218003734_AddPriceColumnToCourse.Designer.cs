@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineLearningWebAPI.Data;
 
@@ -11,9 +12,11 @@ using OnlineLearningWebAPI.Data;
 namespace OnlineLearningWebAPI.Migrations
 {
     [DbContext(typeof(OnlineLearningDbContext))]
-    partial class OnlineLearningDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250218003734_AddPriceColumnToCourse")]
+    partial class AddPriceColumnToCourse
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -272,7 +275,7 @@ namespace OnlineLearningWebAPI.Migrations
                             Id = "1",
                             AccessFailedCount = 0,
                             Avatar = "admin.png",
-                            ConcurrencyStamp = "1a701e17-c589-4fc4-ba40-7083b7acf441",
+                            ConcurrencyStamp = "72b92128-327e-4a19-a4ba-a5f287f61c42",
                             Email = "admin@example.com",
                             EmailConfirmed = false,
                             IsBan = false,
@@ -280,7 +283,7 @@ namespace OnlineLearningWebAPI.Migrations
                             LockoutEnabled = false,
                             PasswordHash = "Aa1234@",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b8255265-a4f0-41ef-9666-0f1a0c7ec4b7",
+                            SecurityStamp = "3250c9e3-9d63-4edf-b2d9-f390d5247832",
                             TwoFactorEnabled = false,
                             UserName = "admin_user"
                         },
@@ -289,7 +292,7 @@ namespace OnlineLearningWebAPI.Migrations
                             Id = "2",
                             AccessFailedCount = 0,
                             Avatar = "student.png",
-                            ConcurrencyStamp = "2a71eeda-a74d-4ebe-9daa-a8d2639f991a",
+                            ConcurrencyStamp = "c87182d9-774b-4eaa-8625-edc7a94d0293",
                             Email = "student@example.com",
                             EmailConfirmed = false,
                             IsBan = false,
@@ -297,7 +300,7 @@ namespace OnlineLearningWebAPI.Migrations
                             LockoutEnabled = false,
                             PasswordHash = "Aa1234@",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6bae7ed8-7a1f-4339-8747-a7b464309b1c",
+                            SecurityStamp = "e3b079e2-4f6e-4bec-bd56-07c86624061c",
                             TwoFactorEnabled = false,
                             UserName = "student_user"
                         });
@@ -397,9 +400,6 @@ namespace OnlineLearningWebAPI.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageURL")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Price")
