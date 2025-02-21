@@ -6,6 +6,7 @@
         public string CourseTitle { get; set; } = null!;
         public string TeacherId { get; set; } = null!;
         public string? Description { get; set; }
+        public string? Image { get; set; }
         public DateOnly? CreateDate { get; set; }
         public int CategoryId { get; set; }
         public string CategoryName { get; set; } = null!;
