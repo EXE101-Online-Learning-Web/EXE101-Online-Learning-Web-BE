@@ -10,6 +10,7 @@ public partial class Course
 
     public string TeacherId { get; set; }
 
+    public string? Image { get; set; }
     public string? Description { get; set; }
 
     public DateOnly? CreateDate { get; set; }
