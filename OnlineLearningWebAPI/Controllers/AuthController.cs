@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -35,6 +36,23 @@ namespace OnlineLearningWebAPI.Controllers
             _roleManager = roleManager;
             _logger = logger;
             _emailSender = emailSender;
+        }
+
+        [HttpGet("profile/{id}")]
+        public async Task<IActionResult> GetProfile(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+            return Ok(new
+            {
+                user.Email,
+                user.UserName,
+                user.Avatar,
+                user.EmailConfirmed
+            });
         }
 
         [HttpPost("Login")]
@@ -234,6 +252,7 @@ namespace OnlineLearningWebAPI.Controllers
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), // Unique token ID
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim("emailConfirmed", user.EmailConfirmed.ToString())
             };
 
             // Lấy danh sách roles của user từ database
