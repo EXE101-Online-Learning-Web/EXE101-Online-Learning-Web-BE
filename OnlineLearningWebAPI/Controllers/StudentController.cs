@@ -46,7 +46,6 @@ namespace OnlineLearningWebAPI.Controllers
             return NoContent();
         }
         [HttpPut("ban/{id}")]
-        [Authorize(Policy = "RequireAdminRole")]
         public async Task<IActionResult> BanStudent(string id)
         {
 
@@ -57,7 +56,6 @@ namespace OnlineLearningWebAPI.Controllers
         }
 
         [HttpPut("unban/{id}")]
-        [Authorize(Policy = "RequireAdminRole")]
         public async Task<IActionResult> UnbanStudent(string id)
         {
 

@@ -34,6 +34,7 @@ namespace OnlineLearningWebAPI.Service
                         Id = account.Id,
                         Email = account.Email,
                         UserName = account.UserName,
+                        IsBan = account.IsBan,
                         Avatar = account.Avatar,
                         IsVip = account.IsVip,
                         Role = TEACHER_ROLE
