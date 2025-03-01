@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using OnlineLearningWebAPI.DTOs.request.PaymentRequest;
 using OnlineLearningWebAPI.Enum;
+using OnlineLearningWebAPI.Models;
 using OnlineLearningWebAPI.Service.IService;
 
 namespace OnlineLearningWebAPI.Controllers
@@ -12,11 +14,13 @@ namespace OnlineLearningWebAPI.Controllers
 		private readonly IPaymentService _paymentService;
 
 		private readonly IOrderService _orderService;
+		private readonly UserManager<Account> _userManager;
 
-		public PaymentController(IPaymentService paymentService, IOrderService orderService)
+		public PaymentController(IPaymentService paymentService, IOrderService orderService, UserManager<Account> userManager)
 		{
 			_paymentService = paymentService;
 			_orderService = orderService;
+			_userManager = userManager;
 		}
 
 		[HttpPost("payment-link")]
@@ -60,6 +64,20 @@ namespace OnlineLearningWebAPI.Controllers
 
 				order.Status = OrderStatus.Completed;
 				await _orderService.UpdateOrderAsync(order);
+
+				if (order.OrderName == "Premium Plan" && order.Status == OrderStatus.Completed)
+				{
+					var userAccount = await _userManager.FindByIdAsync(order.UserId);
+					if (userAccount != null)
+					{
+						// Nếu người dùng đang có role "Student", cập nhật sang "VIP Student"
+						if (await _userManager.IsInRoleAsync(userAccount, "Student"))
+						{
+							await _userManager.RemoveFromRoleAsync(userAccount, "Student");
+							await _userManager.AddToRoleAsync(userAccount, "VIP Student");
+						}
+					}
+				}
 
 				return Ok(new { Message = "Payment successful. Your course has been activated." });
 			}
