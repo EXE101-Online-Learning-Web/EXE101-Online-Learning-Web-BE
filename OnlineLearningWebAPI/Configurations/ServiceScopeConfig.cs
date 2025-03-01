@@ -52,6 +52,9 @@ namespace OnlineLearningWebAPI.Configurations
             services.AddScoped<IOrderService, OrderService>();
 
             services.AddScoped<IOpenAIService, OpenAIService>();
+            services.AddScoped<IScheduleService, ScheduleService>();
+
+            services.AddScoped<IScheduleRepository, ScheduleRepository>();
             return services;
         }
     }

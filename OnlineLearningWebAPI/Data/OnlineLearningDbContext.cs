@@ -47,6 +47,7 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
 
     public virtual DbSet<Order> Orders { get; set; }
     public virtual DbSet<OrderDetail> OrderDetails { get; set; }
+    public virtual DbSet<Schedule> Schedules { get; set; }
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
