@@ -43,7 +43,7 @@ namespace OnlineLearningWebAPI.Service
 			try
 			{
 				var answer = await _scheduleRepository.GetScheduleByUserId(UserId);
-				if (answer.ScheduleString != null)
+				if (answer != null)
 				{
 					return answer.ScheduleString;
 				}
