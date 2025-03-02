@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace OnlineLearningWebAPI.Models;
+﻿namespace OnlineLearningWebAPI.Models;
 
 public partial class CourseCategory
 {

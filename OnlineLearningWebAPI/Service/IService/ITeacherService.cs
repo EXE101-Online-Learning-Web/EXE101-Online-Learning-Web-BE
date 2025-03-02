@@ -1,15 +1,15 @@
 ﻿using OnlineLearningWebAPI.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OnlineLearningWebAPI.DTOs.request.TeacherRequest;
+using OnlineLearningWebAPI.DTOs.Response.TeacherResponse;
 
 namespace OnlineLearningWebAPI.Service.IService
 {
     public interface ITeacherService  
     {
-        Task<TeacherDTO?> GetTeacherByIdAsync(int id);
-        Task<bool> UpdateTeacherAsync(int id, TeacherDTO updateTeacherDTO);
+        Task<AccountDTO?> GetTeacherByIdAsync(string id);
+        Task<List<AccountDTO>> GetAllTeachersAsync();
+        Task<bool> UpdateTeacherDetailsAsync(string id, UpdateAccountDTO updateTeacherDTO);
+        Task<bool> BanTeacherAsync(string id);
+        Task<bool> UnbanTeacherAsync(string id);
     }
 }

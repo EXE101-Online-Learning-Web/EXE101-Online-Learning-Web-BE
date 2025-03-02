@@ -1,51 +1,41 @@
-using Microsoft.EntityFrameworkCore;
-using OnlineLearningWebAPI.Data;
 using OnlineLearningWebAPI.Configurations;
-using Microsoft.AspNetCore.Identity;
-using OnlineLearningWebAPI.Models;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
+var allowedOrigins = builder.Configuration.GetValue<string>("CorsSettings:AllowedOrigins");
 
-// Add services to the container.
-builder.Services.AddControllers();
+// Accept CORS API REACT
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
+});
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.IgnoreNullValues = true;
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
+
+
+//// Add services to the container.
+//builder.Services.AddControllers().AddNewtonsoftJson(options =>
+//    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+//);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-//Config Swagger UI
-builder.Services.AddSwaggerGen(c =>
-{
-    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-    {
-        Description = "JWT Authorization header using the Bearer scheme (Example: 'Bearer <token>').",
-        Name = "Authorization",
-        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
-
-    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-    {
-        {
-            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            {
-                Reference = new Microsoft.OpenApi.Models.OpenApiReference
-                {
-                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
-});
-
-// Config DBContext
-builder.Services.AddDbContext<OnlineLearningDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging(false));
-
-// Add DI for Secret Key JwtToken
-builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("JwtConfig"));
+// Config DTO Scope
+builder.Services.AddDtoScopeConfig(builder, builder.Configuration);
+// Config Service Scope
+builder.Services.AddServiceScopeConfig();
 
 // config Authentication
 builder.Services.AddJwtAuthentication(builder.Configuration);
@@ -53,14 +43,8 @@ builder.Services.AddJwtAuthentication(builder.Configuration);
 // Add Authorize
 builder.Services.AddAuthorizeConfig(builder.Configuration);
 
-builder.Services.AddIdentity<Account, IdentityRole>()
-    .AddEntityFrameworkStores<OnlineLearningDbContext>()
-    .AddDefaultTokenProviders();
-
-// Add Service Scope
-//builder.Services.AddScoped<IRepository<Account>, AccountRepository>();
-//builder.Services.AddScoped<IAccountService, AccountService>();
-//builder.Services.AddScoped<ITeacherService, TeacherSerivce>();
+//Config Swagger UI
+builder.Services.AddSwaggerConfig();
 
 var app = builder.Build();
 
@@ -71,10 +55,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("AllowReactApp");
 app.UseHttpsRedirection();
 app.UseRouting();
 
-// Middleware Authentication và Authorization
+// Middleware Authentication vï¿½ Authorization
 app.UseAuthentication();
 app.UseAuthorization();
 

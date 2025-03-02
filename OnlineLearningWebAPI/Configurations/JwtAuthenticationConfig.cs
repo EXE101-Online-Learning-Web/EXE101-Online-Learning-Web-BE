@@ -1,6 +1,9 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using OnlineLearningWebAPI.Data;
+using OnlineLearningWebAPI.Models;
 
 namespace OnlineLearningWebAPI.Configurations
 {
@@ -36,6 +39,10 @@ namespace OnlineLearningWebAPI.Configurations
                     jwt.SaveToken = true;
                     jwt.TokenValidationParameters = tokenValidationParameters;
                 });
+
+            services.AddIdentity<Account, IdentityRole>()
+                .AddEntityFrameworkStores<OnlineLearningDbContext>()
+                .AddDefaultTokenProviders();
 
             return services;
         }

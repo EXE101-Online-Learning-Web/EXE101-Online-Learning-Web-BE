@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using OnlineLearningWebAPI.Enum;
 using OnlineLearningWebAPI.Models;
 
 namespace OnlineLearningWebAPI.Data;
@@ -47,6 +45,10 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
 
     public virtual DbSet<QuizType> QuizTypes { get; set; }
 
+    public virtual DbSet<Order> Orders { get; set; }
+    public virtual DbSet<OrderDetail> OrderDetails { get; set; }
+    public virtual DbSet<Schedule> Schedules { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -58,8 +60,10 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
                 .Build();
             optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
         }
-        optionsBuilder.EnableSensitiveDataLogging();
+
+        optionsBuilder.EnableSensitiveDataLogging(false);
     }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -82,6 +86,8 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
         ConfigureQuizAnswerEntity(modelBuilder);
         ConfigureQuizTypeEntity(modelBuilder);
         ConfigureSeekData(modelBuilder);
+        ConfigureOrderEntity(modelBuilder);
+        ConfigureOrderDetailEntity(modelBuilder);
     }
 
     private void ConfigureSeekData(ModelBuilder modelBuilder)
@@ -123,6 +129,134 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
             new IdentityUserRole<string> { UserId = "1", RoleId = "1" }, // Admin
             new IdentityUserRole<string> { UserId = "2", RoleId = "2" } // Student
         );
+
+        modelBuilder.Entity<CourseCategory>().HasData(
+            new CourseCategory
+            {
+                CategoryId = 1,
+                Name = "Artificial Intelligence"
+            },
+            new CourseCategory
+            {
+                CategoryId = 2,
+                Name = "Programming Languages"
+            }
+        );
+
+        modelBuilder.Entity<Course>().HasData(
+            new Course
+            {
+                CourseId = 1,
+                CourseTitle = "Introduction to AI",
+                TeacherId = "2",
+                Description = "Learn the fundamentals of Artificial Intelligence.",
+                CreateDate = DateOnly.FromDateTime(DateTime.UtcNow),
+                CategoryId = 1,
+                Status = CourseStatus.Pending
+            },
+            new Course
+            {
+                CourseId = 2,
+                CourseTitle = "Advanced Python Programming",
+                TeacherId = "2",
+                Description = "Master Python with advanced concepts and libraries.",
+                CreateDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-30)),
+                CategoryId = 2,
+                Status = CourseStatus.Approved
+            }
+        );
+
+        modelBuilder.Entity<CourseEnrollment>().HasData(
+            new CourseEnrollment
+            {
+                CourseEnrollmentId = 1,
+                CourseId = 1,
+                AccountId = "2"
+            },
+            new CourseEnrollment
+            {
+                CourseEnrollmentId = 2,
+                CourseId = 2,
+                AccountId = "2"
+            }
+        );
+
+        modelBuilder.Entity<CourseTag>().HasData(
+            new CourseTag
+            {
+                CourseTagId = 1,
+                CourseId = 1,
+                TagName = "AI"
+            },
+            new CourseTag
+            {
+                CourseTagId = 2,
+                CourseId = 2,
+                TagName = "Python"
+            }
+        );
+
+        modelBuilder.Entity<Feedback>().HasData(
+            new Feedback
+            {
+                FeedbackId = 1,
+                AccountId = "2",
+                CourseId = 1,
+                FeedbackText = "Great course on AI!"
+            },
+            new Feedback
+            {
+                FeedbackId = 2,
+                AccountId = "2",
+                CourseId = 2,
+                FeedbackText = "The Python content is very insightful!"
+            }
+        );
+
+        // Seed data for OrderDetail
+        modelBuilder.Entity<OrderDetail>().HasData(
+            new OrderDetail
+            {
+                OrderDetailId = 1,
+                OrderId = 1,
+                CourseId = 1,
+                Price = 50.00m,
+                Quantity = 2
+            },
+            new OrderDetail
+            {
+                OrderDetailId = 2,
+                OrderId = 2,
+                CourseId = 2,
+                Price = 200.00m,
+                Quantity = 1
+            }
+        );
+
+        // Seed data for Order
+        modelBuilder.Entity<Order>().HasData(
+            new Order
+            {
+                OrderId = 1,
+                UserId = "1",
+                OrderDate = new DateTime(2025, 1, 1),
+                TotalAmount = 100.00m,
+                PaymentMethod = "Credit Card",
+                Description = "First order by user1",
+                Status = OrderStatus.Completed // Sử dụng Enum
+            },
+            new Order
+            {
+                OrderId = 2,
+                UserId = "2",
+                OrderDate = new DateTime(2025, 1, 2),
+                TotalAmount = 200.00m,
+                PaymentMethod = "PayPal",
+                Description = "Second order by user2",
+                Status = OrderStatus.Pending // Sử dụng Enum
+            }
+        );
+
     }
 
     private void ConfigureCommonEntities(ModelBuilder modelBuilder)
@@ -195,6 +329,10 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
                   .HasForeignKey(d => d.TeacherId)
                   .OnDelete(DeleteBehavior.ClientSetNull);
         });
+
+        modelBuilder.Entity<Course>()
+            .Property(o => o.Status)
+            .HasConversion<int>(); // Ánh xạ enum thành int trong database
     }
 
     private void ConfigureCourseCategoryEntity(ModelBuilder modelBuilder)
@@ -397,6 +535,65 @@ public partial class OnlineLearningDbContext : IdentityDbContext<Account>
             entity.Property(e => e.QuizTypeId).HasColumnName("quizTypeId");
             entity.Property(e => e.TypeName).HasMaxLength(255).HasColumnName("typeName");
         });
+    }
+
+    private void ConfigureProfileEntity(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Profile>(entity =>
+        {
+            entity.HasKey(e => e.ProfileId);
+            entity.Property(e => e.ProfileId).ValueGeneratedOnAdd();
+            entity.ToTable("Profile");
+
+            entity.HasOne(d => d.Account)
+                  .WithOne(p => p.Profile)
+                  .HasForeignKey<Profile>(d => d.AccountId)
+                  .OnDelete(DeleteBehavior.ClientSetNull);
+        });
+    }
+
+    private void ConfigureOrderEntity(ModelBuilder modelBuilder)
+    {
+        // Quan hệ giữa Order và Account
+        modelBuilder.Entity<Order>()
+            .HasOne(o => o.User)
+            .WithMany(a => a.Orders)
+            .HasForeignKey(o => o.UserId)
+            .HasPrincipalKey(a => a.Id);
+
+        // Cấu hình cơ bản cho Order
+        modelBuilder.Entity<Order>()
+            .Property(o => o.TotalAmount)
+            .HasColumnType("decimal(18,2)");
+
+        modelBuilder.Entity<Order>()
+            .Property(o => o.Status)
+            .HasConversion<int>(); // Ánh xạ enum thành int trong database
+
+        modelBuilder.Entity<Order>()
+            .Property(o => o.Description)
+            .HasMaxLength(500)
+            .IsUnicode(true);
+    }
+
+    private void ConfigureOrderDetailEntity(ModelBuilder modelBuilder)
+    {
+        // Quan hệ giữa OrderDetail và Order
+        modelBuilder.Entity<OrderDetail>()
+            .HasOne(od => od.Order)
+            .WithMany(o => o.OrderDetails)
+            .HasForeignKey(od => od.OrderId);
+
+        // Quan hệ giữa OrderDetail và Course
+        modelBuilder.Entity<OrderDetail>()
+            .HasOne(od => od.Course)
+            .WithMany(c => c.OrderDetails)
+            .HasForeignKey(od => od.CourseId);
+
+        // Cấu hình cơ bản cho OrderDetail
+        modelBuilder.Entity<OrderDetail>()
+            .Property(od => od.Price)
+            .HasColumnType("decimal(18,2)");
     }
 
 
